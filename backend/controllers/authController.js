@@ -2,8 +2,9 @@ const formidable = require('formidable')
 const validator = require('validator')
 const registerModel = require('../models/authModel')
 const bcrypt = require('bcrypt')
-
+const jwt = require('jsonwebtoken')
 const fs = require('fs')
+
 const path = require('node:path')
 
 module.exports.userRegister = (req, res) => {
@@ -63,14 +64,14 @@ module.exports.userRegister = (req, res) => {
             files.avatar.originalFilename = newImageName
 
             const newPath = __dirname + `/../../frontend/public/images/${files.avatar.originalFilename}`
-            
-            console.log(`files == ${JSON.stringify(files)}`)
-            console.log(`
-            \n \n path is ${path.basename('mernchat')} 
-            \n \n filePath is ${files.avatar.filepath}
-            \n \n newPath is ${newPath} 
-            \n \n
-            `)
+
+            // console.log(`files == ${JSON.stringify(files)}`)
+            // console.log(`
+            // \n \n path is ${path.basename('mernchat')} 
+            // \n \n filePath is ${files.avatar.filepath}
+            // \n \n newPath is ${newPath} 
+            // \n \n
+            // `)
 
 
 
@@ -80,7 +81,7 @@ module.exports.userRegister = (req, res) => {
                     email: email
                 })
 
-                console.log(`CHECK USER == ${checkUser}`)
+                //console.log(`CHECK USER == ${checkUser}`)
                 if (checkUser) {
                     res.status(404).json({
                         error: {
@@ -90,6 +91,7 @@ module.exports.userRegister = (req, res) => {
                 } else {
                     fs.copyFile(files.avatar.filepath, newPath, async (error) => {
                         if (!error) {
+                            //register
                             const userCreate = await registerModel.create({
                                 userName,
                                 email,
@@ -97,7 +99,33 @@ module.exports.userRegister = (req, res) => {
                                 image: files.avatar.originalFilename
                             })
 
-                            console.log('REGISTRATION COMPLETE SUCCESSFUL')
+                            // token
+                            const token = jwt.sign({
+                                id: userCreate._id,
+                                email: userCreate.email,
+                                userName: userCreate.userName,
+                                image: userCreate.image,
+                                registerTime: userCreate.createdAt
+                            }, process.env.SECRET, {
+                                expiresIn: process.env.TOKEN_EXP
+                            })
+
+                            // 'Path': '/',
+                            const options = { 
+                                sameSite: 'lax',
+                                secure: true,
+                                httpOnly: true,
+                                maxAge: process.env.COOKIE_EXP * 24 * 60 * 60 * 1000,
+                                expires: new Date(Date.now() + (process.env.COOKIE_EXP * 24 * 60 * 60 * 1000)) 
+                            }
+
+                            res.status(201).cookie('authToken', 
+                            token, options).json({
+                                successMessage: 'Succefully Registered',
+                                token
+                            })
+                            // console.log(`token is ${token} \n`)
+                            // console.log('REGISTRATION COMPLETE SUCCESSFUL')
                         } else {
                             console.log(`userCreate error is ${error}`)
                             res.status(500).json({
