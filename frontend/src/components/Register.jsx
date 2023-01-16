@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 //import { useForm } from "react-hook-form";
+import { useDispatch } from 'react-redux'
+import { userRegister } from "../store/actions/authAction";
 
 const Register = () => {
-  //const { register, handleSubmit, errors } = useForm();
+  
+  const dispatch = useDispatch()
 
   const [formDataState, setformDataState] = useState({
-    username: "",
+    userName: "",
     email: "",
     password: "",
     passwordconfirm: "",
-    avatar: "",
+    avatar: null,
   });
 
   const [loadImage, setLoadImage] = useState("");
+
+  // useEffect(() => {
+  //   console.log(`formDataState is ${JSON.stringify(formDataState)}`)
+  // }, [formDataState])
+  
 
   // text and email fields
   const inputHandle = (e) => {
@@ -26,16 +34,25 @@ const Register = () => {
   // avatar image
   const fileHandle = (e) => {
     console.log('file handle event')
+    // put in our main state
     if (e.target.files.length !== 0) {
       setformDataState({
         ...formDataState,
         [e.target.name]: e.target.files[0],
       });
 
+// console.log(`formDataState is ${JSON.stringify(formDataState)}`)
+// console.log(`loadImageState is ${JSON.stringify(loadImage)}`)
 
+      // use image preview
     const reader = new FileReader();
     reader.onload = () => {
       setLoadImage(reader.result);
+      setformDataState({
+        ...formDataState,
+        [e.target.name]: e.target.files[0],
+      });
+      console.log(`loadImage is ${JSON.stringify(loadImage)}`)
     };
     reader.readAsDataURL(e.target.files[0]);
 
@@ -43,7 +60,7 @@ const Register = () => {
       console.log(`no file chosen`)
       setformDataState({
         ...formDataState,
-        [e.target.name]: '',
+        [e.target.name]: null,
       });
       setLoadImage('');
     }
@@ -52,16 +69,32 @@ const Register = () => {
 
   // function to register user
   const registerNewUser = async (e) => {
+
     e.preventDefault()
-    alert(JSON.stringify(formDataState));
-    alert(JSON.stringify(loadImage));
+
+    const { userName, email, password, passwordconfirm, avatar } = formDataState
+
+    const formData = new FormData();
+
+    formData.append('userName', userName)
+    formData.append('email', email)
+    formData.append('password', password)
+    formData.append('passwordconfirm', passwordconfirm)
+    formData.append('avatar', avatar)
+
+    dispatch(userRegister(formData))
+
+    formData.forEach(function(value, key){
+        console.log(key, ':', value)
+    });
+
   };
 
   // fields
   const formFields = [
     {
-      label: "Username",
-      name: "username",
+      label: "User Name",
+      name: "userName",
       type: "text",
     },
     {
@@ -96,7 +129,7 @@ const Register = () => {
   return (
     <div className="w-screen min-h-screen flex justify-center items-center">
       <div className="max-w-xl w-full  rounded-2xl p-8 lg:py-16 bg-zinc-900">
-        <h1 className="mb-8 text-center">Register your Account</h1>
+        <h1 className="mb-8 text-center">Register a New Account</h1>
         <div className="my-8">
           <form onSubmit={registerNewUser}>
             <fieldset>
@@ -116,7 +149,6 @@ const Register = () => {
                       onChange={fileHandle}
                       name={field.name}
                       accept="image/png, image/jpeg"
-                      placeholder={`Upload`}
                       className={`block my-1 rounded-lg w-full p-2 pl-0`}
                       type={field.type}
                     />

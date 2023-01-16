@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className="w-screen min-h-screen flex justify-center items-center">
     <div className="max-w-xl w-full  rounded-2xl p-8 lg:py-16 bg-zinc-900">
-      <h1 className='mb-8 text-center'>Login to your account</h1>
+      <h1 className='mb-8 text-center'>Login to Your Account</h1>
               <div className="my-8">
           <form onSubmit={loginUser}>
             <fieldset>
