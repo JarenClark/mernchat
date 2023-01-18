@@ -1,16 +1,18 @@
 /** IMPORTS */
 const express = require('express')
 const cors = require('cors')
-// const cookieParser = require('cookie-parser')
 const databaseConnect = require('./config/database')
 const dotenv = require('dotenv')
 const PORT = process.env.PORT || 5000
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 /** OUR SERVER */
 const app = express();
 
 /** COOKIES */
-// app.use(cookieParser());
+app.use(cookieParser());
+app.use(bodyParser.json())
 
 /** CORS */ 
 const corsOpts = {

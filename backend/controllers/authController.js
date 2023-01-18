@@ -125,8 +125,8 @@ module.exports.userRegister = (req, res) => {
                             res.status(201)
                                 .cookie('authToken',
                                     token, options)
-                                .send({successMessage: 'Succefully Registered', token})
-                                
+                                .send({ successMessage: 'Succefully Registered', token })
+
                             // console.log(`token is ${token} \n`)
                             // console.log('REGISTRATION COMPLETE SUCCESSFUL')
                         } else {
@@ -148,9 +148,85 @@ module.exports.userRegister = (req, res) => {
                 })
             }
 
-            // console.log(newImageName)
-
         }
 
     }) // end Formidable
+}
+
+module.exports.userLogin = async (req,res) => {
+    const error = [];
+    const {email,password} = req.body;
+    if(!email){
+        error.push('Please provide your Email');
+   }
+   if(!password){
+        error.push('Please provide your Passowrd');
+   }
+   if(email && !validator.isEmail(email)){
+        error.push('Please provide your Valid Email');
+   }
+   if(error.length > 0){
+        res.status(400).json({
+             error:{
+                  errorMessage : error
+             }
+        })
+   }else {
+
+        try{
+             const checkUser = await registerModel.findOne({
+                  email:email
+             }).select('+password');
+
+             if(checkUser){
+                  const matchPassword = await bcrypt.compare(password, checkUser.password );
+
+                  if(matchPassword) {
+                       const token = jwt.sign({
+                            id : checkUser._id,
+                            email: checkUser.email,
+                            userName: checkUser.userName,
+                            image: checkUser.image,
+                            registerTime : checkUser.createdAt
+                       }, process.env.SECRET,{
+                            expiresIn: process.env.TOKEN_EXP
+                       }); 
+    const options = { expires : new Date(Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000 )}
+
+   res.status(200).cookie('authToken',token, options).json({
+        successMessage : 'Your Login Successful',token
+   })
+
+                  } else{
+                       res.status(400).json({
+                            error: {
+                                 errorMessage : ['Your Password not Valid']
+                            }
+                       })
+                  }
+             } else{
+                  res.status(400).json({
+                       error: {
+                            errorMessage : ['Your Email Not Found']
+                       }
+                  })
+             }
+              
+
+        } catch{
+             res.status(404).json({
+                  error: {
+                       errorMessage : ['Internal Sever Error']
+                  }
+             })
+
+        }
+   }
+
+}
+
+module.exports.userLogout = (req,res) => {
+   res.status(200).cookie('authToken', '').json({
+        success : true
+   })
 }
