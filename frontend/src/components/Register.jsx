@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 //import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../store/actions/authAction";
 import { useAlert } from "react-alert";
+import { SUCCESS_MESSAGE_CLEAR } from "../store/types/authType";
 
 const Register = () => {
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const alert = useAlert();
-
-  const {loading,authenticate,error,successMessage,myInfo} = useSelector(state=>state.auth);
-  console.log(`myInfo:`,myInfo);
+  const { loading, authenticate, error, successMessage, myInfo } = useSelector(
+    (state) => state.auth
+  );
 
   const [formDataState, setformDataState] = useState({
     userName: "",
@@ -24,30 +24,22 @@ const Register = () => {
 
   const [loadImage, setLoadImage] = useState("");
 
-  // useEffect(() => {
-  //   console.log(`formDataState is ${JSON.stringify(formDataState)}`)
-  // }, [formDataState])
 
   // text and email fields
   const inputHandle = (e) => {
-    console.log("input handle event");
     setformDataState({
       ...formDataState,
       [e.target.name]: e.target.value,
     });
   };
-  // avatar image
+  // avatar image 
   const fileHandle = (e) => {
-    console.log("file handle event");
     // put in our main state
     if (e.target.files.length !== 0) {
       setformDataState({
         ...formDataState,
         [e.target.name]: e.target.files[0],
       });
-
-      // console.log(`formDataState is ${JSON.stringify(formDataState)}`)
-      // console.log(`loadImageState is ${JSON.stringify(loadImage)}`)
 
       // use image preview
       const reader = new FileReader();
@@ -126,6 +118,19 @@ const Register = () => {
   //   <div className="flex rounded-full w-16 h-16 mr-4 overflow-hidden">
   //   <img src={loadImage} />
   // </div>
+
+  useEffect(() => {
+    if (authenticate) {
+      navigate("/");
+    }
+    if (successMessage) {
+      alert.success(successMessage);
+      dispatch({type: SUCCESS_MESSAGE_CLEAR })
+    }
+    if (error && error.errorMessage) {
+      error.errorMessage.map((err) => alert.error(err));
+    }
+  }, [loading, authenticate, successMessage, error]);
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center">

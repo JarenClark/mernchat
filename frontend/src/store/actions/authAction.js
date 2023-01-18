@@ -41,7 +41,7 @@ export const userRegister = (data) => {
             dispatch({
                 type: REGISTER_FAIL,
                 payload: {
-                    error: error?.response?.data?.error ?? 'Unknown Error'
+                    error: error?.response?.data?.error ?? [error]
                 }
             })
             console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)

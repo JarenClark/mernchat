@@ -50,7 +50,7 @@ module.exports.userRegister = (req, res) => {
         if (errors.length > 0) {
             res.status(400).json({
                 error: {
-                    errorMessage: errors.join('\n')
+                    errorMessage: errors
                 }
             })
         } else {

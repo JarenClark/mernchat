@@ -9,6 +9,7 @@ const authState = {
     myInfo: ''
 }
 
+// get info from our token
 const tokenDecode = (token) =>{
     const tokenDecoded = deCodeToken(token);
     const expTime = new Date(tokenDecoded.exp*1000);
@@ -27,34 +28,65 @@ if(getToken) {
         authState.myInfo = getInfo
         authState.authenticate = true
         authState.loading = false
+        authState.successMessage = 'You are logged in'
     }
 }
 
-const authReducer = ( state = authState, action) => {
-    const { payload, type } = action; 
+export const authReducer = (state = authState, action) => {
+    const {payload,type} = action;
 
-    if(type == REGISTER_FAIL) {
-        return {
-            ...state,
-            error: payload.error,
-            authenticate: false,
-            loading: false
-        }
+    if(type === REGISTER_FAIL || type === USER_LOGIN_FAIL){
+         return {
+              ...state,
+              error : payload.error,
+              authenticate : false,
+              myInfo : '',
+              loading : true
+         }
     }
 
-    if(type == REGISTER_SUCCESS) {
-        const myInfo = tokenDecode(payload.token)
-        return {
-            ...state,
-            myInfo: myInfo,
-            successMessage: payload.successMessage,
-            authenticate: true,
-            loading: false,
-            error: ''
-        }
+    if(type === REGISTER_SUCCESS || type === USER_LOGIN_SUCCESS){
+         const myInfo = tokenDecode(payload.token);
+         return{
+              ...state,
+              myInfo : myInfo,
+              successMessage : payload.successMessage,
+              error : '',
+              authenticate : true,
+              loading: false
+
+         }
+
+    } 
+
+
+    if(type === SUCCESS_MESSAGE_CLEAR){
+         return {
+              ...state,
+              successMessage : ''
+         }
     }
 
-    return state
+    if(type === ERROR_CLEAR){
+         return {
+              ...state,
+              error : ''
+         }
+    }
+
+
+    if(type === 'LOGOUT_SUCCESS'){
+         return {
+              ...state,
+              authenticate : false,
+              myInfo : '',
+              successMessage: 'Logout Successfull',
+             
+         }
+    }
+
+
+    return state;
 }
 
 export default authReducer
