@@ -1,21 +1,22 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
-import { Provider } from 'react-redux'
-import store from './store'
-import {
-  createBrowserRouter,
-  RouterProvider
-} from 'react-router-dom'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { Provider } from "react-redux";
+import store from "./store";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Root, Home, Login, Register, ErrorPage } from './components'
+import { positions, transitions, Provider as AlertProvider } from "react-alert";
+import alertTemplate from "react-alert-template-basic";
+
+import { Root, Home, Login, Register, ErrorPage } from "./components";
+import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />
+    errorElement: <ErrorPage />,
   },
   {
     path: "/home",
@@ -31,10 +32,18 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  
+const alertOptions = {
+  timeout: 5000,
+  positions: positions.TOP_RIGHT,
+  transitions: transitions.FADE
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <AlertProvider template={alertTemplate} {...alertOptions}>
+        <RouterProvider router={router} />
+      </AlertProvider>
     </Provider>
-  ,
-)
+  </>
+);

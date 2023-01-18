@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 //import { useForm } from "react-hook-form";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../store/actions/authAction";
+import { useAlert } from "react-alert";
 
 const Register = () => {
-  
-  const dispatch = useDispatch()
+
+  const dispatch = useDispatch();
+
+  const alert = useAlert();
+
+  const {loading,authenticate,error,successMessage,myInfo} = useSelector(state=>state.auth);
+  console.log(`myInfo:`,myInfo);
 
   const [formDataState, setformDataState] = useState({
     userName: "",
@@ -21,11 +27,10 @@ const Register = () => {
   // useEffect(() => {
   //   console.log(`formDataState is ${JSON.stringify(formDataState)}`)
   // }, [formDataState])
-  
 
   // text and email fields
   const inputHandle = (e) => {
-    console.log('input handle event')
+    console.log("input handle event");
     setformDataState({
       ...formDataState,
       [e.target.name]: e.target.value,
@@ -33,7 +38,7 @@ const Register = () => {
   };
   // avatar image
   const fileHandle = (e) => {
-    console.log('file handle event')
+    console.log("file handle event");
     // put in our main state
     if (e.target.files.length !== 0) {
       setformDataState({
@@ -41,53 +46,50 @@ const Register = () => {
         [e.target.name]: e.target.files[0],
       });
 
-// console.log(`formDataState is ${JSON.stringify(formDataState)}`)
-// console.log(`loadImageState is ${JSON.stringify(loadImage)}`)
+      // console.log(`formDataState is ${JSON.stringify(formDataState)}`)
+      // console.log(`loadImageState is ${JSON.stringify(loadImage)}`)
 
       // use image preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLoadImage(reader.result);
-      setformDataState({
-        ...formDataState,
-        [e.target.name]: e.target.files[0],
-      });
-      console.log(`loadImage is ${JSON.stringify(loadImage)}`)
-    };
-    reader.readAsDataURL(e.target.files[0]);
-
+      const reader = new FileReader();
+      reader.onload = () => {
+        setLoadImage(reader.result);
+        setformDataState({
+          ...formDataState,
+          [e.target.name]: e.target.files[0],
+        });
+        console.log(`loadImage is ${JSON.stringify(loadImage)}`);
+      };
+      reader.readAsDataURL(e.target.files[0]);
     } else {
-      console.log(`no file chosen`)
+      console.log(`no file chosen`);
       setformDataState({
         ...formDataState,
         [e.target.name]: null,
       });
-      setLoadImage('');
+      setLoadImage("");
     }
-
   };
 
   // function to register user
   const registerNewUser = async (e) => {
+    e.preventDefault();
 
-    e.preventDefault()
-
-    const { userName, email, password, passwordconfirm, avatar } = formDataState
+    const { userName, email, password, passwordconfirm, avatar } =
+      formDataState;
 
     const formData = new FormData();
 
-    formData.append('userName', userName)
-    formData.append('email', email)
-    formData.append('password', password)
-    formData.append('passwordconfirm', passwordconfirm)
-    formData.append('avatar', avatar)
+    formData.append("userName", userName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("passwordconfirm", passwordconfirm);
+    formData.append("avatar", avatar);
 
-    dispatch(userRegister(formData))
+    dispatch(userRegister(formData));
 
-    formData.forEach(function(value, key){
-        console.log(key, ':', value)
+    formData.forEach(function (value, key) {
+      console.log(key, ":", value);
     });
-
   };
 
   // fields
@@ -119,12 +121,11 @@ const Register = () => {
     },
   ];
 
-
   // loadImage != '' &&
 
-//   <div className="flex rounded-full w-16 h-16 mr-4 overflow-hidden">
-//   <img src={loadImage} />
-// </div>
+  //   <div className="flex rounded-full w-16 h-16 mr-4 overflow-hidden">
+  //   <img src={loadImage} />
+  // </div>
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center">
@@ -135,33 +136,33 @@ const Register = () => {
             <fieldset>
               {formFields.map((field, i) => (
                 <div key={i} className="mb-4">
-
                   <label className="text-sm" htmlFor={field.name}>
                     {field.label}
                   </label>
-                  {field.type == 'file' ? (
-                  <div className="flex items-center">
-                    {loadImage != '' &&
-                    <div style={{backgroundImage: `url(${loadImage})`}} className="w-20 h-20 rounded-full bg-cover bg-center mr-4">
-                      </div>
-                    }
+                  {field.type == "file" ? (
+                    <div className="flex items-center">
+                      {loadImage != "" && (
+                        <div
+                          style={{ backgroundImage: `url(${loadImage})` }}
+                          className="w-20 h-20 rounded-full bg-cover bg-center mr-4"
+                        ></div>
+                      )}
+                      <input
+                        onChange={fileHandle}
+                        name={field.name}
+                        accept="image/png, image/jpeg"
+                        className={`block my-1 rounded-lg w-full p-2 pl-0`}
+                        type={field.type}
+                      />
+                    </div>
+                  ) : (
                     <input
-                      onChange={fileHandle}
+                      onChange={inputHandle}
                       name={field.name}
-                      accept="image/png, image/jpeg"
-                      className={`block my-1 rounded-lg w-full p-2 pl-0`}
+                      className="block my-1 rounded-lg w-full p-2"
                       type={field.type}
                     />
-                  </div>
-                  ) : (
-                  <input
-                    onChange={inputHandle}
-                    name={field.name}
-                    className="block my-1 rounded-lg w-full p-2"
-                    type={field.type}
-                  />
                   )}
-                  
                 </div>
               ))}
             </fieldset>

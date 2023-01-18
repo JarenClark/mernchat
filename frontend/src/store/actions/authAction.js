@@ -5,7 +5,6 @@ const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
 
 // Accept: 'application/json',
 //,credentials: 'same-origin',
-
 // 'Content-Type': 'multipart/form-data',
 // 'Content-Type': undefined,
 //'Content-Type': 'application/json',
@@ -42,7 +41,7 @@ export const userRegister = (data) => {
             dispatch({
                 type: REGISTER_FAIL,
                 payload: {
-                    error: error.response.data.error
+                    error: error?.response?.data?.error ?? 'Unknown Error'
                 }
             })
             console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
