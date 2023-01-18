@@ -111,19 +111,22 @@ module.exports.userRegister = (req, res) => {
                             })
 
                             // 'Path': '/',
-                            const options = { 
-                                sameSite: 'lax',
+                            //  expires: new Date(Date.now() + (process.env.COOKIE_EXP * 24 * 60 * 60 * 1000)) 
+                            // domain: process.env.FRONTEND_DOMAIN,
+                            const options = {
+                                sameSite: 'none',
                                 secure: true,
                                 httpOnly: true,
                                 maxAge: process.env.COOKIE_EXP * 24 * 60 * 60 * 1000,
-                                expires: new Date(Date.now() + (process.env.COOKIE_EXP * 24 * 60 * 60 * 1000)) 
+
                             }
 
-                            res.status(201).cookie('authToken', 
-                            token, options).json({
-                                successMessage: 'Succefully Registered',
-                                token
-                            })
+                            console.log(`options are ${JSON.stringify(options)}`)
+                            res.status(201)
+                                .cookie('authToken',
+                                    token, options)
+                                .send({successMessage: 'Succefully Registered', token})
+                                
                             // console.log(`token is ${token} \n`)
                             // console.log('REGISTRATION COMPLETE SUCCESSFUL')
                         } else {
