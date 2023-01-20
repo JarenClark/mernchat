@@ -16,18 +16,6 @@ const Login = () => {
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (authenticate) {
-      navigate("/");
-    }
-    if (successMessage) {
-      alert.success(successMessage);
-      dispatch({ type: SUCCESS_MESSAGE_CLEAR });
-    }
-    if (error && error.errorMessage) {
-      error.errorMessage.map((err) => alert.error(err));
-    }
-  }, [loading, authenticate, successMessage, error]);
 
   //  form state
   const [formDataState, setformDataState] = useState({
@@ -46,14 +34,11 @@ const Login = () => {
   // login function
   const loginUser = async (e) => {
     e.preventDefault();
-    console.log(formDataState);
 
     const { email, password} = formDataState
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-
-    console.log(formData)
 
     dispatch(userLogin(formData));
   };
@@ -70,6 +55,20 @@ const Login = () => {
       type: "password",
     },
   ];
+
+
+  useEffect(() => {
+    if (authenticate) {
+      navigate("/");
+    }
+    if (successMessage) {
+      alert.success(successMessage);
+      dispatch({ type: SUCCESS_MESSAGE_CLEAR });
+    }
+    if (error && error.errorMessage) {
+      error.errorMessage.map((err) => alert.error(err));
+    }
+  }, [loading, authenticate, successMessage, error]);
 
   return (
     <div className="w-screen min-h-screen flex justify-center items-center">

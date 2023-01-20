@@ -51,8 +51,8 @@ export const userRegister = (data) => {
 }
 
 export const userLogin = (data) => {
-    console.log(`login data from auth action is ${data}`)
     return async (dispatch) => {
+
         const config = {
             headers: {
                 'Content-Type': 'application/json'
@@ -60,24 +60,28 @@ export const userLogin = (data) => {
         }
 
         try {
-            const response = await axios.post('/api/messenger/user-login', data, config);
+            const response = await axios.post(`${SERVER_URL}/api/messenger/user-login`, data, config);
             localStorage.setItem('authToken', response.data.token);
             document.cookie = `authToken=${response.data.token};max-age=${7 * 24 * 60 * 60 * 1000};Same-Site=None;Secure=True;`
-            dispath({
+
+            dispatch({
                 type: USER_LOGIN_SUCCESS,
                 payload: {
                     successMessage: response.data.successMessage,
                     token: response.data.token
                 }
-            })  
+            })
+
         } catch (error) {
+            console.log(`${error.response?.data?.error?.errorMessage ?? `${error}`}`)
+            
             dispatch({
                 type: USER_LOGIN_FAIL,
                 payload: {
                     error: error?.response?.data?.error ?? [error]
                 }
             })
-            console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
+
         }
     }
 }

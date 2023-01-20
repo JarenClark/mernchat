@@ -33,7 +33,9 @@ if(getToken) {
 }
 
 export const authReducer = (state = authState, action) => {
-    const {payload,type} = action;
+    const {payload, type} = action;
+    console.log(`TYPE == ${type}`)
+
 
     if(type === REGISTER_FAIL || type === USER_LOGIN_FAIL){
          return {
@@ -47,6 +49,7 @@ export const authReducer = (state = authState, action) => {
 
     if(type === REGISTER_SUCCESS || type === USER_LOGIN_SUCCESS){
          const myInfo = tokenDecode(payload.token);
+         
          return{
               ...state,
               myInfo : myInfo,
@@ -75,7 +78,7 @@ export const authReducer = (state = authState, action) => {
     }
 
 
-    if(type === 'LOGOUT_SUCCESS'){
+    if(type === LOGOUT_SUCCESS){
          return {
               ...state,
               authenticate : false,
