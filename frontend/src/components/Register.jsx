@@ -113,12 +113,6 @@ const Register = () => {
     },
   ];
 
-  // loadImage != '' &&
-
-  //   <div className="flex rounded-full w-16 h-16 mr-4 overflow-hidden">
-  //   <img src={loadImage} />
-  // </div>
-
   useEffect(() => {
     if (authenticate) {
       navigate("/");

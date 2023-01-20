@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { SUCCESS_MESSAGE_CLEAR } from "../store/types/authType";
+import { userLogin } from "../store/actions/authAction";
 const Login = () => {
   // utils
   const alert = useAlert();
@@ -36,7 +37,6 @@ const Login = () => {
 
   // input change handler
   const inputHandle = (e) => {
-    console.log("input handle event");
     setformDataState({
       ...formDataState,
       [e.target.name]: e.target.value,
@@ -47,6 +47,15 @@ const Login = () => {
   const loginUser = async (e) => {
     e.preventDefault();
     console.log(formDataState);
+
+    const { email, password} = formDataState
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    console.log(formData)
+
+    dispatch(userLogin(formData));
   };
 
   const formFields = [

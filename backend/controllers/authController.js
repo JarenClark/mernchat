@@ -4,6 +4,7 @@ const registerModel = require('../models/authModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
+const console = require('console');
 
 const path = require('node:path')
 
@@ -153,80 +154,84 @@ module.exports.userRegister = (req, res) => {
     }) // end Formidable
 }
 
-module.exports.userLogin = async (req,res) => {
+module.exports.userLogin = async (req, res) => {
+    // const form = formidable();
+    console.log(`req.body is ${req.body}`)
+    // form.parse(req, async (err, fields, files) => {
+
     const error = [];
-    const {email,password} = req.body;
-    if(!email){
+    const { email, password } = req.body;
+    if (!email) {
         error.push('Please provide your Email');
-   }
-   if(!password){
-        error.push('Please provide your Passowrd');
-   }
-   if(email && !validator.isEmail(email)){
+    }
+    if (!password) {
+        error.push('Please provide your Password');
+    }
+    if (email && !validator.isEmail(email)) {
         error.push('Please provide your Valid Email');
-   }
-   if(error.length > 0){
+    }
+    if (error.length > 0) {
         res.status(400).json({
-             error:{
-                  errorMessage : error
-             }
+            error: {
+                errorMessage: error
+            }
         })
-   }else {
+    } else {
 
-        try{
-             const checkUser = await registerModel.findOne({
-                  email:email
-             }).select('+password');
+        try {
+            const checkUser = await registerModel.findOne({
+                email: email
+            }).select('+password');
 
-             if(checkUser){
-                  const matchPassword = await bcrypt.compare(password, checkUser.password );
+            if (checkUser) {
+                const matchPassword = await bcrypt.compare(password, checkUser.password);
 
-                  if(matchPassword) {
-                       const token = jwt.sign({
-                            id : checkUser._id,
-                            email: checkUser.email,
-                            userName: checkUser.userName,
-                            image: checkUser.image,
-                            registerTime : checkUser.createdAt
-                       }, process.env.SECRET,{
-                            expiresIn: process.env.TOKEN_EXP
-                       }); 
-    const options = { expires : new Date(Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000 )}
+                if (matchPassword) {
+                    const token = jwt.sign({
+                        id: checkUser._id,
+                        email: checkUser.email,
+                        userName: checkUser.userName,
+                        image: checkUser.image,
+                        registerTime: checkUser.createdAt
+                    }, process.env.SECRET, {
+                        expiresIn: process.env.TOKEN_EXP
+                    });
+                    const options = { expires: new Date(Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000) }
 
-   res.status(200).cookie('authToken',token, options).json({
-        successMessage : 'Your Login Successful',token
-   })
+                    res.status(200).cookie('authToken', token, options).json({
+                        successMessage: 'Your Login Successful', token
+                    })
 
-                  } else{
-                       res.status(400).json({
-                            error: {
-                                 errorMessage : ['Your Password not Valid']
-                            }
-                       })
-                  }
-             } else{
-                  res.status(400).json({
-                       error: {
-                            errorMessage : ['Your Email Not Found']
-                       }
-                  })
-             }
-              
+                } else {
+                    res.status(400).json({
+                        error: {
+                            errorMessage: ['Your Password not Valid']
+                        }
+                    })
+                }
+            } else {
+                res.status(400).json({
+                    error: {
+                        errorMessage: ['Your Email Not Found']
+                    }
+                })
+            }
 
-        } catch{
-             res.status(404).json({
-                  error: {
-                       errorMessage : ['Internal Sever Error']
-                  }
-             })
+
+        } catch {
+            res.status(404).json({
+                error: {
+                    errorMessage: ['Internal Sever Error']
+                }
+            })
 
         }
-   }
+    }
 
 }
 
-module.exports.userLogout = (req,res) => {
-   res.status(200).cookie('authToken', '').json({
-        success : true
-   })
+module.exports.userLogout = (req, res) => {
+    res.status(200).cookie('authToken', '').json({
+        success: true
+    })
 }

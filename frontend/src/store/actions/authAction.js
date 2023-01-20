@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { REGISTER_FAIL } from '../types/authType'
+import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_SUCCESS } from '../types/authType'
 
 const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
 
@@ -25,17 +25,16 @@ export const userRegister = (data) => {
                 data,
                 config
             )
-            localStorage.setItem('authToken',response.data.token);
+            localStorage.setItem('authToken', response.data.token);
             document.cookie = `authToken=${response.data.token};max-age=${7 * 24 * 60 * 60 * 1000};Same-Site=None;Secure=True;`
-            console.log(`Response Data is ${response.data.successMessage}`)
 
             dispatch({
-                type : REGISTER_SUCCESS,
-                payload:{
-                     successMessage: response.data.successMessage,
-                     token : response.data.token
+                type: REGISTER_SUCCESS,
+                payload: {
+                    successMessage: response.data.successMessage,
+                    token: response.data.token
                 }
-           })
+            })
 
         } catch (error) {
             dispatch({
@@ -47,6 +46,38 @@ export const userRegister = (data) => {
             console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
             // alert(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
 
+        }
+    }
+}
+
+export const userLogin = (data) => {
+    console.log(`login data from auth action is ${data}`)
+    return async (dispatch) => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            const response = await axios.post('/api/messenger/user-login', data, config);
+            localStorage.setItem('authToken', response.data.token);
+            document.cookie = `authToken=${response.data.token};max-age=${7 * 24 * 60 * 60 * 1000};Same-Site=None;Secure=True;`
+            dispath({
+                type: USER_LOGIN_SUCCESS,
+                payload: {
+                    successMessage: response.data.successMessage,
+                    token: response.data.token
+                }
+            })  
+        } catch (error) {
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload: {
+                    error: error?.response?.data?.error ?? [error]
+                }
+            })
+            console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
         }
     }
 }
