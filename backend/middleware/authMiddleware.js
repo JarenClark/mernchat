@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 
 module.exports.authMiddleware = async(req,res,next) => {
      const {authToken} = req.cookies;
+     console.log(`req.cookies are ${authToken}`)
      if(authToken){
-          const deCodeToken = await jwt.verify(authToken,process.env.SECRET);
+          const deCodeToken = await jwt.verify(authToken, process.env.SECRET);
           req.myId = deCodeToken.id;
           next();
      }else{

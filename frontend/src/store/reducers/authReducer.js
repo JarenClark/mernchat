@@ -83,7 +83,7 @@ export const authReducer = (state = authState, action) => {
               ...state,
               authenticate : false,
               myInfo : '',
-              successMessage: 'Logout Successfull',
+              successMessage: 'Logout Successful',
              
          }
     }

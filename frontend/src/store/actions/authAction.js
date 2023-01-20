@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_SUCCESS } from '../types/authType'
+import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, LOGOUT_SUCCESS } from '../types/authType'
 
 const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
 
@@ -82,6 +82,33 @@ export const userLogin = (data) => {
                 }
             })
 
+        }
+    }
+}
+
+export const userLogout = () => {
+     const dummy_data = {'abc': '123'} // 
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            withCredentials: true,
+            'Cookie': localStorage.getItem('authToken')
+        }
+    }
+
+    return async (dispatch) => {
+        try {
+            const response = await axios.post(`${SERVER_URL}/api/messenger/user-logout`, dummy_data, config);
+            if(response.data.success){
+                localStorage.removeItem('authToken');
+                document.cookie = `authToken=null;max-age=0;`
+
+                dispatch({
+                    type : LOGOUT_SUCCESS
+                })
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
 }
