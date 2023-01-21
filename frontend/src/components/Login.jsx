@@ -35,10 +35,12 @@ const Login = () => {
   const loginUser = async (e) => {
     e.preventDefault();
 
-    const { email, password} = formDataState
+    const { email, password } = formDataState
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
+
+    console.log(`formDataState`,formDataState)
 
     dispatch(userLogin(formData));
   };

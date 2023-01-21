@@ -14,34 +14,43 @@ const app = express();
 app.use(cookieParser());
 app.use(bodyParser.json())
 
+
 /** CORS */ 
 const corsOpts = {
     origin: [
         'http://localhost', 
         'http://localhost:3000', 
         'http://localhost:5000', 
-        '127.0.0.1'
+        '127.0.0.1',
+        'http://127.0.0.1:3000'
     ],
+    supportsCredentials: true,
     credentials: true,
     methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: [
         'Accept',
         'credentials',
+        'Access-Control-Allow-Origin',
         'Access-Control-Allow-Credentials',
         'access-control-allow-credentials',
         'Content-Type',
+        'Authorization',
         'withCredentials',
         'set-cookie',
         'Set-Cookie',
+        'Cookie',
+        'Cache-Control',
     ],
     exposedHeaders: [
+        'Access-Control-Allow-Origin',
         'Content-Type', 
         'set-cookie',
         'Set-Cookie',
+        'Cookie',
+        'Cache-Control',
     ]
 };
 app.use(cors(corsOpts));
-
 
 
 

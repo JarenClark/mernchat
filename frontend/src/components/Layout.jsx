@@ -41,7 +41,7 @@ const Layout = ({ children, title }) => {
                 <button
                   onClick={logout}
                   style={{
-                    backgroundImage: `url(/public/images/${myInfo.image})`,
+                    backgroundImage: `url(/images/${myInfo.image})`,
                   }}
                   className="bg-cover bg-center p-8  rounded-full"
                 ></button>
