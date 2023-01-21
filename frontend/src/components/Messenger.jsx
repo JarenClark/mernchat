@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Phone, Video } from "./svg";
+import { Phone, Send, Video } from "./svg";
 
 const Messenger = () => {
   // redux state
@@ -9,23 +9,31 @@ const Messenger = () => {
   );
   return (
     <>
-      <div className="p-6 flex items-center justify-between border-b border-zinc-700">
-        <div className="inline-flex items-center space-x-4">
-          <div
-            style={{
-              backgroundImage: `url(/images/${myInfo.image})`,
-            }}
-            className="w-16 h-16 rounded-full bg-cover bg-center"
-          ></div>
-          <h2 className="text-xl font-bold">{myInfo.userName}</h2>
-        </div>
-
-        <div className="inline-flex items-center space-x-4">
-          <div className="bg-zinc-700 p-2 rounded-full">
-            <Phone />
+      <div className="flex h-screen flex-col justify-between">
+        <div className="p-6 flex items-center justify-between border-b border-zinc-700">
+          <div className="inline-flex items-center space-x-4">
+            <div
+              style={{
+                backgroundImage: `url(/images/${myInfo.image})`,
+              }}
+              className="w-16 h-16 rounded-full bg-cover bg-center"
+            ></div>
+            <h2 className="text-xl font-bold">{myInfo.userName}</h2>
           </div>
-          <div className="bg-zinc-700 p-2 rounded-full">
-            <Video />
+
+          <div className="inline-flex items-center space-x-4">
+            <div className="bg-zinc-700 p-2 rounded-full">
+              <Phone />
+            </div>
+            <div className="bg-zinc-700 p-2 rounded-full">
+              <Video />
+            </div>
+          </div>
+        </div>
+        <div className="p-6 flex justify-between border-t border-zinc-700">
+          <div>THis is a new message</div>
+          <div>
+            <Send />
           </div>
         </div>
       </div>

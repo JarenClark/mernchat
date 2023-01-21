@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
 import { Ellipsis, SearchIcon } from "./svg";
-// import LeftSidebar from "./LeftSidebar";
 
 const LeftSidebar = () => {
     
