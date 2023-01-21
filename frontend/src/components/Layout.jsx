@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
+import { Ellipsis, SearchIcon } from "./svg";
+import { LeftSidebar, Messenger, RightSidebar } from "./";
 
 const Layout = ({ children, title }) => {
-  
   const dispatch = useDispatch();
-  
+
   // router
   const navigate = useNavigate();
 
@@ -29,32 +30,20 @@ const Layout = ({ children, title }) => {
   }, [loading, authenticate]);
 
   return (
-    <div className="flex flex-col justify-between min-h-screen">
-      <div>
-        <header className="border-b">
-          <div className="flex items-center justify-between px-8">
-            <div className="p-4">
-              <h1 className="text-center">chat...</h1>
-            </div>
-            <div className="inline-flex space-x-4 py-4">
-              {authenticate && (
-                <button
-                  onClick={logout}
-                  style={{
-                    backgroundImage: `url(/images/${myInfo.image})`,
-                  }}
-                  className="bg-cover bg-center p-8  rounded-full"
-                ></button>
-              )}
-            </div>
-          </div>
-        </header>
+    <>
+      <div className="flex w-screen h-screen jusify-between overflow-hidden">
+        {/* LEFT SIDEBAR */}
+        <LeftSidebar />
 
-        <main>{children}</main>
+        {/* MAIN */}
+        <main className="fill-available">
+          <Messenger />
+        </main>
+
+        {/* RIGHT SIDEBAR */}
+        <RightSidebar />
       </div>
-
-      <footer className="border-t py-4"></footer>
-    </div>
+    </>
   );
 };
 

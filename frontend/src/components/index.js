@@ -1,5 +1,8 @@
 /** components */
 import Layout from "./Layout"
+import RightSidebar from "./RightSidebar"
+import LeftSidebar from "./LeftSidebar"
+import Messenger from "./Messenger"
 
 /** routes */
 import Root from "./Root"
@@ -12,4 +15,4 @@ import Register from './Register'
 import ProtectedRoute from './ProtectedRoute'
 
 
-export { Root , ErrorPage, Home, Login, Register,Layout, ProtectedRoute}
+export { Root , ErrorPage, Home, Login, Register, Layout, LeftSidebar, Messenger, RightSidebar, ProtectedRoute}

@@ -6,7 +6,7 @@ function Root() {
   return (
     <>
       <Layout>
-        <div>Root</div>
+        
       </Layout>
     </>
   )
