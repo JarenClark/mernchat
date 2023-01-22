@@ -7,6 +7,9 @@ const PORT = process.env.PORT || 5000
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
+
+// import messengerRouter from './routes/messengerRoute'
+
 /** OUR SERVER */
 const app = express();
 
@@ -54,8 +57,6 @@ app.use(cors(corsOpts));
 
 
 
-const authRouter = require('./routes/authRoute')
-
 dotenv.config({
     path: 'backend/config/config.env'
 })
@@ -68,7 +69,11 @@ app.get('/', (req, res) => {
 })
 
 /** CONTROLLERS */
+const authRouter = require('./routes/authRoute')
+const messengerRouter = require('./routes/messengerRoute')
+
 app.use('/api/messenger', authRouter)
+app.use('/api/messenger', messengerRouter)
 
 /** DATABASE */
 databaseConnect()

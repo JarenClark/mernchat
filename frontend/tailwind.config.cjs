@@ -8,7 +8,11 @@ module.exports = {
     container: {
       center:true,
     },
-    extend: {},
+    extend: {
+      transitionProperty: {
+        'width': 'width'
+    },
+    },
   },
   plugins: [],
 }

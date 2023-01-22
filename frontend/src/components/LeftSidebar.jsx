@@ -6,7 +6,6 @@ import { userLogout } from "../store/actions/authAction";
 import { Ellipsis, SearchIcon } from "./svg";
 
 const LeftSidebar = () => {
-    
   const dispatch = useDispatch();
 
   // router
@@ -93,7 +92,7 @@ const LeftSidebar = () => {
         {Array.from(Array(15).keys()).map((i) => (
           <li
             key={i}
-            className={`px-6 border-b hover:bg-indigo-900 border-zinc-700 py-4 flex items-center space-x-4`}
+            className={`px-6 border-b hover:bg-black border-zinc-700 py-4 flex items-center space-x-4`}
           >
             <div
               style={{

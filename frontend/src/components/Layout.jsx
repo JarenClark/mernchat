@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
 import { Ellipsis, SearchIcon } from "./svg";
 import { LeftSidebar, Messenger, RightSidebar } from "./";
+import { getFriends } from "../store/actions/messengerAction";
 
 const Layout = ({ children, title }) => {
+  // state
   const dispatch = useDispatch();
+  const [infoPanelIsOpen, setInfoPanelIsOpen] = useState(false); // right sidebar
 
   // router
   const navigate = useNavigate();
@@ -29,6 +31,11 @@ const Layout = ({ children, title }) => {
     }
   }, [loading, authenticate]);
 
+  // get our friends
+  useEffect(() => {
+    dispatch(getFriends())
+  }, [])
+  
   return (
     <>
       <div className="flex w-screen h-screen jusify-between overflow-hidden">
@@ -37,11 +44,17 @@ const Layout = ({ children, title }) => {
 
         {/* MAIN */}
         <main className="fill-available">
-          <Messenger />
+          <Messenger
+            infoPanelIsOpen={infoPanelIsOpen}
+            setInfoPanelIsOpen={setInfoPanelIsOpen}
+          />
         </main>
 
         {/* RIGHT SIDEBAR */}
-        <RightSidebar />
+        <RightSidebar
+          infoPanelIsOpen={infoPanelIsOpen}
+          setInfoPanelIsOpen={setInfoPanelIsOpen}
+        />
       </div>
     </>
   );

@@ -156,7 +156,7 @@ module.exports.userRegister = (req, res) => {
 
 module.exports.userLogin = async (req, res) => {
     // const form = formidable();
-    console.log(`req.body is ${req.body}`)
+    // console.log(`req.body is ${req.body}`)
     // form.parse(req, async (err, fields, files) => {
 
     const error = [];
