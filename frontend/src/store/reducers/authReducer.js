@@ -32,7 +32,7 @@ if(getToken) {
     }
 }
 
-export const authReducer = (state = authState, action) => {
+const authReducer = (state = authState, action) => {
     const {payload, type} = action;
     console.log(`TYPE == ${type}`)
 
