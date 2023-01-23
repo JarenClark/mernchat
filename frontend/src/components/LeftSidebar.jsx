@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
-import { Ellipsis, SearchIcon } from "./svg";
+import { Ellipsis, Pencil, SearchIcon } from "./svg";
 
-const LeftSidebar = () => {
+const LeftSidebar = (props) => {
+  const { currentFriend, setcurrentFriend } = props;
   const dispatch = useDispatch();
 
   // router
@@ -15,6 +16,7 @@ const LeftSidebar = () => {
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
     (state) => state.auth
   );
+  const { friends } = useSelector((state) => state.messenger);
 
   // logout button
   const logout = () => {
@@ -44,11 +46,11 @@ const LeftSidebar = () => {
         </div>
 
         <div className="inline-flex items-center space-x-2">
-          <div className="bg-zinc-700 p-2 rounded-full">
+          <div className="bg-zinc-700 hover:bg-black p-2 rounded-full">
             <Ellipsis />
           </div>
-          <div className="bg-zinc-700 p-2 rounded-full">
-            <Ellipsis />
+          <div className="bg-zinc-700 hover:bg-black p-2 rounded-full">
+            <Pencil />
           </div>
         </div>
       </div>
@@ -68,44 +70,59 @@ const LeftSidebar = () => {
       </div>
 
       {/* ACTIVE FRIENDS LIST */}
-      <ul className="px-6 mb-4 pb-4 flex space-x-4 w-full overflow-x-auto">
-        {Array.from(Array(12).keys()).map((i) => (
-          <li key={i}>
-            <div
-              style={{
-                backgroundImage: `url(/images/${myInfo.image})`,
-              }}
-              className="relative w-12 h-12 rounded-full bg-cover bg-center"
-            >
-              <div className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1"></div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {friends && friends.length > 0 ? (
+        <ul className="px-6 mb-4 pb-4 flex space-x-4 w-full overflow-x-auto">
+          {friends.map((friend, i) => (
+            <li key={i}>
+              <div
+                style={{
+                  backgroundImage: `url(/images/${friend.image})`,
+                }}
+                className="relative w-12 h-12 rounded-full bg-cover bg-center"
+              >
+                <div className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1"></div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="px-6 py-4">
+          <p>No other users online</p>
+        </div>
+      )}
 
-      {/* CHATS LIST */}
+      {/* USERS LIST */}
       <ul
         id="friend-list"
         style={{ maxHeight: `70vh` }}
         className="overflow-y-auto overflow-x-hidden  border-t  border-zinc-700"
       >
-        {Array.from(Array(15).keys()).map((i) => (
+        {friends.map((friend, i) => (
           <li
             key={i}
-            className={`px-6 border-b hover:bg-black border-zinc-700 py-4 flex items-center space-x-4`}
+            className={` pr-4 cursor-pointer border-b hover:bg-black ${
+              currentFriend != null && currentFriend._id == friend._id
+                ? `bg-black`
+                : ``
+            } border-zinc-700`}
           >
-            <div
-              style={{
-                backgroundImage: `url(/images/${myInfo.image})`,
-              }}
-              className="w-16 h-16 rounded-full bg-cover bg-center"
-            ></div>
-            <div>
-              <h3 className="font-bold">{myInfo.userName}</h3>
-              <p className="text-zinc-500 truncate">
-                Lorem ipsum dolor, sit amet text-ellipsis elit...
-              </p>
-            </div>
+            <button
+              className="text-left px-6 py-4 flex overflow-hidden items-center space-x-4"
+              onClick={() => setcurrentFriend(friend)}
+            >
+              <div
+                style={{
+                  backgroundImage: `url(/images/${friend.image})`,
+                }}
+                className="w-16 h-16 rounded-full bg-cover bg-center"
+              ></div>
+              <div>
+                <h3 className="font-bold">{friend.userName}</h3>
+                <p className="text-zinc-500 truncate">
+                  Lorem ipsum dolor, sit amet text-ellipsis elit...
+                </p>
+              </div>
+            </button>
           </li>
         ))}
       </ul>

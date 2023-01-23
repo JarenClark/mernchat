@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
 import { Ellipsis, SearchIcon } from "./svg";
 import { LeftSidebar, Messenger, RightSidebar } from "./";
@@ -10,6 +10,7 @@ const Layout = ({ children, title }) => {
   // state
   const dispatch = useDispatch();
   const [infoPanelIsOpen, setInfoPanelIsOpen] = useState(false); // right sidebar
+  const [currentFriend, setcurrentFriend] = useState(null);
 
   // router
   const navigate = useNavigate();
@@ -33,18 +34,22 @@ const Layout = ({ children, title }) => {
 
   // get our friends
   useEffect(() => {
-    dispatch(getFriends())
-  }, [])
-  
+    dispatch(getFriends());
+  }, []);
+
   return (
     <>
       <div className="flex w-screen h-screen jusify-between overflow-hidden">
         {/* LEFT SIDEBAR */}
-        <LeftSidebar />
+        <LeftSidebar
+          currentFriend={currentFriend}
+          setcurrentFriend={setcurrentFriend}
+        />
 
         {/* MAIN */}
         <main className="fill-available">
           <Messenger
+            currentFriend={currentFriend}
             infoPanelIsOpen={infoPanelIsOpen}
             setInfoPanelIsOpen={setInfoPanelIsOpen}
           />
@@ -52,6 +57,7 @@ const Layout = ({ children, title }) => {
 
         {/* RIGHT SIDEBAR */}
         <RightSidebar
+          currentFriend={currentFriend}
           infoPanelIsOpen={infoPanelIsOpen}
           setInfoPanelIsOpen={setInfoPanelIsOpen}
         />
