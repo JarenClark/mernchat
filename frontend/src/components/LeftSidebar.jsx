@@ -100,11 +100,11 @@ const LeftSidebar = (props) => {
         {friends.map((friend, i) => (
           <li
             key={i}
-            className={` pr-4 cursor-pointer border-b hover:bg-black ${
+            className={` pr-4 cursor-pointer transition duration-200 border-b border-zinc-700 ${
               currentFriend != null && currentFriend._id == friend._id
                 ? `bg-black`
-                : ``
-            } border-zinc-700`}
+                : `hover:bg-black `
+            } `}
           >
             <button
               className="text-left px-6 py-4 flex overflow-hidden items-center space-x-4"

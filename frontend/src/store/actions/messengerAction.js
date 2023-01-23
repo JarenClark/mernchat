@@ -20,3 +20,11 @@ export const getFriends = () => async (dispatch) => {
 }
 
 
+export const messageSend = (data) => async (dispatch) => {
+    console.log(data)
+    try {
+        const response = await axios.post(`${SERVER_URL}/api/messenger/send-message`)
+    } catch (error) {
+        
+    }
+}

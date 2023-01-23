@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Attachment,
   Close,
@@ -10,9 +10,12 @@ import {
   Send,
   Video,
 } from "./svg";
+import { messageSend } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
   const { currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
+
+  const dispatch = useDispatch();
 
   // redux state
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
@@ -25,10 +28,20 @@ const Messenger = (props) => {
   const messageHandle = (e) => {
     setNewMessage(e.target.value);
   };
-  useEffect(() => {
-    console.log(`newMessage is: \n ${newMessage}`)
-  }, [newMessage])
-  
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    const data = {
+      sender: myInfo.id,
+      senderName: myInfo.userName,
+      receiver: currentFriend._id,
+      message: newMessage,
+    };
+    dispatch(messageSend(data));
+  };
+  // useEffect(() => {
+  //   console.log(`newMessage is: \n ${newMessage}`)
+  // }, [newMessage])
 
   return (
     <>
@@ -101,25 +114,20 @@ const Messenger = (props) => {
 
             {/* SEND MESSAGE */}
             <div className="rounded-full space-x-4 inline-flex items-center fill-available bg-zinc-700 overflow-hidden px-4 justify-between p-2">
-              <form className="fill-available">
-                {/* <textarea
-                name="msg"
-                id="msg"
-                rows="1"
-                placeholder="New Message..."
-                className="bg-transparent w-full"
-              ></textarea> */}
-                <input
-                  name="msg"
-                  type="text"
-                  placeholder="New Message..."
-                  onChange={messageHandle}
-                  className="p-1 bg-transparent w-full"
-                />
+              <form onSubmit={sendMessage} className="fill-available">
+                <fieldset className="flex">
+                  <input
+                    name="msg"
+                    type="text"
+                    placeholder="New Message..."
+                    onChange={messageHandle}
+                    className="p-1 bg-transparent w-full"
+                  />
+                  <button disabled={newMessage.length == 0} type="submit" className="disabled:opacity-30">
+                    <Send />
+                  </button>
+                </fieldset>
               </form>
-              <button>
-                <Send />
-              </button>
             </div>
 
             {/* SEND EMOJI */}
