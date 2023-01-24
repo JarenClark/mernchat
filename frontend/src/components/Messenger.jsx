@@ -14,14 +14,13 @@ import {
 import { messageSend, getMessages } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
-
   const { currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
 
   const dispatch = useDispatch();
 
   //refs
   const inputRef = useRef(null);
-  const scrollRef = useRef(null)
+  const scrollRef = useRef(null);
 
   // redux state
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
@@ -31,7 +30,6 @@ const Messenger = (props) => {
 
   // message stuff
   const [newMessage, setNewMessage] = useState("");
-
 
   const messageHandle = (e) => {
     setNewMessage(e.target.value);
@@ -63,81 +61,105 @@ const Messenger = (props) => {
 
   // scroll to bottom of messages
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior: 'smooth'})
-  }, [messages])
-  
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // emojis
   const emojis = [
-    '😀', '😃', '😄', '😁',
-    '😆', '😅', '😂', '🤣',
-    '😊', '😇', '🙂', '🙃',
-    '😉', '😌', '😍', '😝',
-    '😜', '🧐', '🤓', '😎',
-    '😕', '🤑', '🥴', '😱'
-]
+    "😀",
+    "😃",
+    "😄",
+    "😁",
+    "😆",
+    "😅",
+    "😂",
+    "🤣",
+    "😊",
+    "😇",
+    "🙂",
+    "🙃",
+    "😉",
+    "😌",
+    "😍",
+    "😝",
+    "😜",
+    "🧐",
+    "🤓",
+    "😎",
+    "😕",
+    "🤑",
+    "🥴",
+    "😱",
+  ];
 
-  //onSubmit={sendMessage} 
+
+  // className={`${
+  //   currentFriend ? `translate-y-0` : `-translate-y-full`
+  // } transition duration-500`}
+
 
   return (
     <>
       <div className="flex h-screen flex-col justify-between">
-        <div
-          className={`transition duration-500 h-[12.5vh] ${
-            currentFriend ? `translate-y-0` : `-translate-y-full`
-          }`}
-        >
-          <div className="p-6 flex items-center justify-between border-b border-zinc-700">
-            <div className="inline-flex items-center space-x-4">
-              {currentFriend ? (
-                <div
-                  style={{
-                    backgroundImage: `url(/images/${currentFriend.image})`,
-                  }}
-                  className="w-16 h-16 rounded-full bg-cover bg-center"
-                ></div>
-              ) : (
-                <div className="w-16 h-16 bg-zinc-700 rounded-full bg-cover bg-center"></div>
-              )}
-              {currentFriend ? (
-                <h2 className="text-xl font-bold">{currentFriend.userName}</h2>
-              ) : (
-                <div className="flex flex-col space-y-2">
-                  <div className="p-2 w-40 bg-zinc-700 "></div>
-                  <div className="p-2 w-64 bg-zinc-700 "></div>
+        {/* HEADER INFO */}
+        <div className={` h-[12.5vh] border-b border-zinc-700`}>
+          <div>
+            <div className={`  p-6 flex items-center justify-between `}>
+              <div className="inline-flex items-center space-x-4">
+                {currentFriend ? (
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/${currentFriend.image})`,
+                    }}
+                    className="w-16 h-16 rounded-full bg-cover bg-center"
+                  ></div>
+                ) : (
+                  <div className="w-16 h-16 bg-zinc-700 rounded-full bg-cover bg-center"></div>
+                )}
+                {currentFriend ? (
+                  <h2 className="text-xl font-bold">
+                    {currentFriend.userName}
+                  </h2>
+                ) : (
+                  <div className="flex flex-col space-y-2">
+                    <div className="p-2 w-40 bg-zinc-700 "></div>
+                    <div className="p-2 w-64 bg-zinc-700 "></div>
+                  </div>
+                )}
+              </div>
+
+              {currentFriend && (
+                <div className="inline-flex items-center space-x-4 ">
+                  <div className="bg-zinc-700 p-2 rounded-full hover:bg-black">
+                    <Phone />
+                  </div>
+
+                  <div className="bg-zinc-700 p-2 rounded-full hover:bg-black">
+                    <Video />
+                  </div>
+
+                  {!infoPanelIsOpen && (
+                    <button
+                      onClick={() => setInfoPanelIsOpen(!infoPanelIsOpen)}
+                      className="bg-zinc-700 p-2 rounded-full hover:bg-black"
+                    >
+                      {infoPanelIsOpen ? <Close /> : <Info />}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
-
-            {currentFriend && (
-              <div className="inline-flex items-center space-x-4 ">
-                <div className="bg-zinc-700 p-2 rounded-full hover:bg-black">
-                  <Phone />
-                </div>
-
-                <div className="bg-zinc-700 p-2 rounded-full hover:bg-black">
-                  <Video />
-                </div>
-
-                {!infoPanelIsOpen && (
-                  <button
-                    onClick={() => setInfoPanelIsOpen(!infoPanelIsOpen)}
-                    className="bg-zinc-700 p-2 rounded-full hover:bg-black"
-                  >
-                    {infoPanelIsOpen ? <Close /> : <Info />}
-                  </button>
-                )}
-              </div>
-            )}
           </div>
         </div>
 
+        {/* ON LOGIN SHOW THIS MESSAGE */}
         {currentFriend == null && (
           <h3 className="text-center text-zinc-600 text-lg">
             Select a friend to start chatting.
           </h3>
         )}
 
+        {/* IF THERE ARE NO CHATS WITH CURRENT FRIEND */}
         {currentFriend != null && messages.length == 0 && (
           <h3 className="m-auto text-center text-zinc-600 text-lg">
             Let's get this conversation going!
@@ -145,10 +167,8 @@ const Messenger = (props) => {
         )}
         <div>
           {/* MAIN MESSAGE AREA */}
-
-          {/* {msg.senderId == myInfo.id ? myMessageClasses: theirMessageClasses} */}
           {currentFriend != null && (
-            <div className="p-6 overflow-y-scroll max-h-[75vh]">
+            <div className="p-6 overflow-y-auto max-h-[75vh]">
               <ul>
                 {messages.map((msg, i) => (
                   <li
@@ -207,14 +227,17 @@ const Messenger = (props) => {
             <div className="rounded-full space-x-4 inline-flex items-center fill-available bg-zinc-700 overflow-hidden px-4 justify-between p-2">
               <form onSubmit={sendMessage} className="fill-available">
                 <fieldset className="flex">
+
                   <input
                     ref={inputRef}
                     name="msg"
                     type="text"
+                    autoComplete="off"
                     placeholder="New Message..."
                     onChange={messageHandle}
                     className="p-1 bg-transparent w-full"
                   />
+
                   <button
                     disabled={newMessage.length == 0}
                     type="submit"

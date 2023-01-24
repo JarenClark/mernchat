@@ -1,6 +1,7 @@
 /** IMPORTS */
 const express = require('express')
 const cors = require('cors')
+const http = require('http')
 const databaseConnect = require('./config/database')
 const dotenv = require('dotenv')
 const PORT = process.env.PORT || 5000
@@ -18,12 +19,12 @@ app.use(cookieParser());
 app.use(bodyParser.json())
 
 
-/** CORS */ 
+/** CORS */
 const corsOpts = {
     origin: [
-        'http://localhost', 
-        'http://localhost:3000', 
-        'http://localhost:5000', 
+        'http://localhost',
+        'http://localhost:3000',
+        'http://localhost:5000',
         '127.0.0.1',
         'http://127.0.0.1:3000'
     ],
@@ -46,7 +47,7 @@ const corsOpts = {
     ],
     exposedHeaders: [
         'Access-Control-Allow-Origin',
-        'Content-Type', 
+        'Content-Type',
         'set-cookie',
         'Set-Cookie',
         'Cookie',
@@ -54,7 +55,6 @@ const corsOpts = {
     ]
 };
 app.use(cors(corsOpts));
-
 
 
 dotenv.config({
@@ -78,6 +78,21 @@ app.use('/api/messenger', messengerRouter)
 /** DATABASE */
 databaseConnect()
 
+/** SOCKET */
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors : {
+        origin : '*',
+        methods : ['GET','POST']
+   }
+});
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
+server.listen(8000, () => {
+    console.log('socket.io is listening on *:8000');
+});
 
 app.listen(PORT, () => {
     console.log(`SERVER IS RUNNING ON PORT ${PORT}`)

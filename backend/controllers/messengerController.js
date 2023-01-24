@@ -3,7 +3,7 @@ const Message = require('../models/messageModel')
 //const messageData = require('../models/')
 
 module.exports.getFriends = async (req, res) => {
-    console.log(`req.id, ${req.myId}`)
+
     try {
 
         const friendGet = await User.find({})
@@ -20,13 +20,11 @@ module.exports.getFriends = async (req, res) => {
         })
 
     }
-    // console.log('hello from module.exports.getFriends')
-    // console.log('friendGet.filter(x => x._id != req.myId)')
+
 }
 
 module.exports.sendMessage = async (req, res) => {
 
-    console.log(`attempting to upload message to database`)
     const {
         senderName,
         receiver,
@@ -91,14 +89,11 @@ module.exports.getMessages = async (req, res) => {
 
         })
 
-        // let getOurMessages = await Message.find({})
-        // getOurMessages = getOurMessages.filter(m=>m.senderId === myId && m.receiverId === friendId || m.receiverId ===  myId && m.senderId === friendId );
-
-        console.log(getOurMessages, getOurMessages.length)
         res.status(200).json({
             success:true,
             messages: getOurMessages
         })
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({
