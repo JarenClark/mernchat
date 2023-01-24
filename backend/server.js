@@ -82,18 +82,38 @@ databaseConnect()
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
-    cors : {
-        origin : '*',
-        methods : ['GET','POST']
-   }
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+    }
 });
+let users = []
 io.on('connection', (socket) => {
-    console.log('a user connected');
+
+    console.log('socket connected');
+
+    socket.on('chat message', (msg) => {
+        console.log('message: ' + msg);
+    });
+    
 });
 server.listen(8000, () => {
     console.log('socket.io is listening on *:8000');
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+/** CONFIRM OUR SERVER IS RUNNING */
 app.listen(PORT, () => {
     console.log(`SERVER IS RUNNING ON PORT ${PORT}`)
 })

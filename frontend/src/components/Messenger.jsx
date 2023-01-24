@@ -14,7 +14,8 @@ import {
 import { messageSend, getMessages } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
-  const { currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
+  
+  const { socket, activeUsers, currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
 
   const dispatch = useDispatch();
 
@@ -36,6 +37,8 @@ const Messenger = (props) => {
   };
 
   const sendMessage = (e) => {
+
+    // send to our server
     e.preventDefault();
     const data = {
       sender: myInfo.id,
@@ -43,11 +46,16 @@ const Messenger = (props) => {
       receiver: currentFriend._id,
       message: newMessage,
     };
-
     dispatch(messageSend(data));
+
     //reset input
     inputRef.current.value = "";
     setNewMessage("");
+
+    // socket stuff
+    socket.current.emit('chat message', newMessage);
+
+
   };
 
   useEffect(() => {

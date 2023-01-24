@@ -20,16 +20,10 @@ const Layout = ({ children, title }) => {
     (state) => state.auth
   );
 
-  // socket
-  const socket = useRef();
-  const [activeUser, setActiveUser] = useState([]);
-  const [socketMessage, setSocketMessage] = useState("");
-  const [typingMessage, setTypingMessage] = useState("");
-
-  useEffect(() => {
-    socket.current = io("ws://localhost:8000");
-    console.log(socket.current)
-  }, []);
+  // useEffect(() => {
+  //   socket.current = io("ws://localhost:8000");
+  //   console.log(socket.current)
+  // }, []);
 
   // kick us to login if we are not authenticated
   useEffect(() => {
@@ -43,11 +37,55 @@ const Layout = ({ children, title }) => {
     dispatch(getFriends());
   }, []);
 
+  // socket
+  const socket = useRef();
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [socketMessage, setSocketMessage] = useState("");
+  const [typingMessage, setTypingMessage] = useState("");
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8000");
+    socket.current.on("getMessage", (data) => {
+      setSocketMessage(data);
+    });
+
+    socket.current.on("typingMessageGet", (data) => {
+      setTypingMessage(data);
+    });
+
+    socket.current.on("msgSeenResponse", (msg) => {
+      dispatch({
+        type: "SEEN_MESSAGE",
+        payload: {
+          msgInfo: msg,
+        },
+      });
+    });
+
+    socket.current.on("msgDelivaredResponse", (msg) => {
+      dispatch({
+        type: "DELIVARED_MESSAGE",
+        payload: {
+          msgInfo: msg,
+        },
+      });
+    });
+
+    socket.current.on("seenSuccess", (data) => {
+      dispatch({
+        type: "SEEN_ALL",
+        payload: data,
+      });
+    });
+  }, []);
+
   return (
     <>
-      <div className="flex w-screen h-screen jusify-between overflow-hidden">
+      <div className="flex w-screen h-screen justify-between overflow-hidden">
         {/* LEFT SIDEBAR */}
         <LeftSidebar
+          socket={socket}
+          activeUsers={activeUsers}
           currentFriend={currentFriend}
           setcurrentFriend={setcurrentFriend}
         />
@@ -55,6 +93,8 @@ const Layout = ({ children, title }) => {
         {/* MAIN */}
         <main className="fill-available">
           <Messenger
+            socket={socket}
+            activeUsers={activeUsers}
             currentFriend={currentFriend}
             infoPanelIsOpen={infoPanelIsOpen}
             setInfoPanelIsOpen={setInfoPanelIsOpen}
@@ -63,6 +103,8 @@ const Layout = ({ children, title }) => {
 
         {/* RIGHT SIDEBAR */}
         <RightSidebar
+          socket={socket}
+          activeUsers={activeUsers}
           currentFriend={currentFriend}
           infoPanelIsOpen={infoPanelIsOpen}
           setInfoPanelIsOpen={setInfoPanelIsOpen}
