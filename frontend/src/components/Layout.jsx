@@ -11,7 +11,7 @@ const Layout = ({ children, title }) => {
   const dispatch = useDispatch();
   const [infoPanelIsOpen, setInfoPanelIsOpen] = useState(false); // right sidebar
   const [currentFriend, setcurrentFriend] = useState(null);
-
+  
   // router
   const navigate = useNavigate();
 

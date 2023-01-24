@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../store/actions/authAction";
-import { Ellipsis, Pencil, SearchIcon } from "./svg";
+import { Ellipsis, Logout, Pencil, SearchIcon } from "./svg";
 
 const LeftSidebar = (props) => {
   const { currentFriend, setcurrentFriend } = props;
@@ -36,7 +36,6 @@ const LeftSidebar = (props) => {
       <div className="p-6 flex items-center justify-between">
         <div className="inline-flex items-center space-x-4">
           <div
-            onClick={logout}
             style={{
               backgroundImage: `url(/images/${myInfo.image})`,
             }}
@@ -46,12 +45,18 @@ const LeftSidebar = (props) => {
         </div>
 
         <div className="inline-flex items-center space-x-2">
-          <div className="bg-zinc-700 hover:bg-black p-2 rounded-full">
-            <Ellipsis />
-          </div>
+
           <div className="bg-zinc-700 hover:bg-black p-2 rounded-full">
             <Pencil />
           </div>
+
+          <div
+            onClick={logout}
+            className="bg-zinc-700 hover:bg-black p-2 rounded-full"
+          >
+            <Logout />
+          </div>
+          
         </div>
       </div>
 
