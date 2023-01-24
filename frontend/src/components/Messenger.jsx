@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { format, formatRelative } from "date-fns";
 import {
   Attachment,
   Close,
@@ -13,9 +14,14 @@ import {
 import { messageSend, getMessages } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
+
   const { currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
 
   const dispatch = useDispatch();
+
+  //refs
+  const inputRef = useRef(null);
+  const scrollRef = useRef(null)
 
   // redux state
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
@@ -26,7 +32,6 @@ const Messenger = (props) => {
   // message stuff
   const [newMessage, setNewMessage] = useState("");
 
-  const inputRef = useRef(null);
 
   const messageHandle = (e) => {
     setNewMessage(e.target.value);
@@ -56,14 +61,29 @@ const Messenger = (props) => {
     dispatch(getMessages(currentFriend?._id ?? null));
   }, [currentFriend]);
 
-  // message classes for left/right
-  const myMessageClasses = `ml-auto`
-  const theirMessageClasses = `mr-auto`
+  // scroll to bottom of messages
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behavior: 'smooth'})
+  }, [messages])
+  
+
+  // emojis
+  const emojis = [
+    '😀', '😃', '😄', '😁',
+    '😆', '😅', '😂', '🤣',
+    '😊', '😇', '🙂', '🙃',
+    '😉', '😌', '😍', '😝',
+    '😜', '🧐', '🤓', '😎',
+    '😕', '🤑', '🥴', '😱'
+]
+
+  //onSubmit={sendMessage} 
+
   return (
     <>
       <div className="flex h-screen flex-col justify-between">
         <div
-          className={`transition duration-500 ${
+          className={`transition duration-500 h-[12.5vh] ${
             currentFriend ? `translate-y-0` : `-translate-y-full`
           }`}
         >
@@ -117,20 +137,54 @@ const Messenger = (props) => {
             Select a friend to start chatting.
           </h3>
         )}
+
+        {currentFriend != null && messages.length == 0 && (
+          <h3 className="m-auto text-center text-zinc-600 text-lg">
+            Let's get this conversation going!
+          </h3>
+        )}
         <div>
           {/* MAIN MESSAGE AREA */}
 
           {/* {msg.senderId == myInfo.id ? myMessageClasses: theirMessageClasses} */}
           {currentFriend != null && (
-            <div className="p-6">
+            <div className="p-6 overflow-y-scroll max-h-[75vh]">
               <ul>
                 {messages.map((msg, i) => (
-                  <li key={i} className={`flex mb-4 ${msg.senderId == myInfo.id && `justify-end`}`}>
-                    <div className={`max-w-1/3 flex flex-col ${msg.senderId == myInfo.id && `items-end`}`}>
-                    <div className={` p-2 text-lg rounded-lg ${msg.senderId == myInfo.id ? `bg-zinc-700` : `bg-black`}`}>
-                      {msg.message.text}
-                    </div>
-                    <span>{msg.createdAt.toLocaleDateString('EN-us',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <li
+                    ref={scrollRef}
+                    key={i}
+                    className={`flex mb-4 ${
+                      msg.senderId == myInfo.id && `justify-end`
+                    }`}
+                  >
+                    {msg.senderId != myInfo.id && (
+                      <div
+                        style={{
+                          backgroundImage: `url(/images/${currentFriend.image})`,
+                        }}
+                        className="w-10 h-10 mr-4 rounded-full bg-cover bg-center"
+                      ></div>
+                    )}
+                    <div
+                      className={`max-w-1/3 flex flex-col ${
+                        msg.senderId == myInfo.id && `items-end`
+                      }`}
+                    >
+                      <div
+                        className={` p-2 text-lg rounded-lg ${
+                          msg.senderId == myInfo.id ? `bg-zinc-700` : `bg-black`
+                        }`}
+                      >
+                        {msg.message.text ? msg.message.text : null}
+                        {msg.message.image ? (
+                          <img src={msg.message.image} alt="" />
+                        ) : null}
+                      </div>
+                      <div className="px-2 text-sm">
+                        {" "}
+                        {formatRelative(new Date(msg.createdAt), new Date())}
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -142,7 +196,7 @@ const Messenger = (props) => {
           <div
             className={`${
               currentFriend ? `translate-y-0` : `translate-y-full`
-            } transition duration-500 p-6 flex space-x-4 items-center justify-between border-t border-zinc-700`}
+            } transition duration-500 p-6 flex space-x-4 items-center justify-between border-t border-zinc-700 h-[12.5vh]`}
           >
             {/* ATTACH IMAGE */}
             <div>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_USERS_SUCCESS, MESSAGE_GET_SUCCESS } from "../types/messengerTypes";
+import { GET_USERS_SUCCESS, MESSAGE_GET_SUCCESS, MESSAGE_SEND_SUCCESS } from "../types/messengerTypes";
 
 const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
 
@@ -35,6 +35,12 @@ export const messageSend = (data) => async (dispatch) => {
     }
     try {
         const response = await axios.post(`${SERVER_URL}/api/messenger/send-message`, data)
+        dispatch({
+            type: MESSAGE_SEND_SUCCESS,
+            payload: {
+                message: response.data.message
+            }
+        })
     } catch (error) {
         console.log(JSON.stringify(error))
     }
@@ -48,7 +54,9 @@ export const getMessages = (id) => async( dispatch) => {
         console.log(response?.data)
         dispatch({
             type: MESSAGE_GET_SUCCESS,
-            payload: response.data.messages
+            payload: {
+                messages: response.data.messages
+            }
         })
     } catch (error) {
         console.log(error?.response?.data)
