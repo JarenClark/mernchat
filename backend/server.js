@@ -101,6 +101,7 @@ const userRemove = (socketId) => {
 }
 
 const findFriend = (id) => {
+    console.log('attempting to findfriend')
     return users.find(u => u.userId === id);
 }
 
@@ -131,7 +132,7 @@ io.on('connection', (socket) => {
 
         const user = findFriend(data.receiverId);
 
-        console.log(`USERS ARE ${users}`)
+        console.log(`USERS ARE ${users.length}`)
         console.log(`USER IS ${user}`)
 
         if (user !== undefined) {

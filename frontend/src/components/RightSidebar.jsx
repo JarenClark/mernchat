@@ -6,6 +6,7 @@ import { userLogout } from "../store/actions/authAction";
 import { Close, Ellipsis, SearchIcon } from "./svg";
 
 const RightSidebar = (props) => {
+  
   const { activeUsers, infoPanelIsOpen, setInfoPanelIsOpen, currentFriend } =
     props;
 
@@ -31,9 +32,9 @@ const RightSidebar = (props) => {
     }
   }, [loading, authenticate]);
 
-  console.log(`activeUSERS are ${JSON.stringify(activeUsers, null, 4)}`)
-
+  // active/away badge
   const isActive = activeUsers.find(u => u.userId == currentFriend?.fndInfo?._id)
+
   return (
     <>
       {currentFriend && (

@@ -14,12 +14,9 @@ import {
 import { messageSend, getMessages } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
-
-
   //refs
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
-
 
   const {
     socket,
@@ -31,7 +28,6 @@ const Messenger = (props) => {
   } = props;
 
   const dispatch = useDispatch();
-
 
   // redux state
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
@@ -56,6 +52,11 @@ const Messenger = (props) => {
     });
   };
 
+  const sendHeart = () => {
+      setNewMessage("❤");
+      sendMessage();
+  }
+
   const sendMessage = (e) => {
     // send to our server
     e.preventDefault();
@@ -78,9 +79,6 @@ const Messenger = (props) => {
     //reset input
     inputRef.current.value = "";
     setNewMessage("");
-
-    // socket stuff
-    socket.current.emit("chat message", newMessage);
   };
 
   useEffect(() => {
@@ -98,6 +96,7 @@ const Messenger = (props) => {
   }, [messages]);
 
   useEffect(() => {
+    console.log(`useEffect messageSendSuccess dependency`);
     if (messageSendSuccess) {
       socket.current.emit("sendMessage", messages[messages.length - 1]);
       dispatch({

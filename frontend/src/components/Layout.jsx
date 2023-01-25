@@ -50,6 +50,7 @@ const Layout = ({ children, title }) => {
   useEffect(() => {
     socket.current = io("ws://localhost:8000");
     socket.current.on("getMessage", (data) => {
+      console.log(`SOCKET SENT GETMESSAGE`)
       setSocketMessage(data);
     });
 
