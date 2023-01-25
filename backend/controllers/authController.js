@@ -122,7 +122,7 @@ module.exports.userRegister = (req, res) => {
 
                             }
 
-                            console.log(`options are ${JSON.stringify(options)}`)
+                            //console.log(`options are ${JSON.stringify(options)}`)
                             res.status(201)
                                 .cookie('authToken',
                                     token, options)

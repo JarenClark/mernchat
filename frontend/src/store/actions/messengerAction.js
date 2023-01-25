@@ -27,7 +27,7 @@ export const getFriends = () => async (dispatch) => {
 
 
 export const messageSend = (data) => async (dispatch) => {
-    console.log(data)
+    //console.log(data)
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -47,11 +47,12 @@ export const messageSend = (data) => async (dispatch) => {
 }
 
 export const getMessages = (id) => async( dispatch) => {
-    console.log(id)
+
     if(!id){return null}
+    
     try {
         const response = await axios.get(`${SERVER_URL}/api/messenger/get-messages/${id}`)  
-        console.log(response?.data)
+        //console.log(response?.data)
         dispatch({
             type: MESSAGE_GET_SUCCESS,
             payload: {
@@ -60,5 +61,27 @@ export const getMessages = (id) => async( dispatch) => {
         })
     } catch (error) {
         console.log(error?.response?.data)
+    }
+}
+
+
+export const seenMessage = (msg) => async(dispatch)=> {
+    try{
+         const response = await axios.post('/api/messenger/seen-message',msg);
+         console.log(response.data);
+    }catch (error){
+         console.log(error.response.message)
+
+    }
+}
+
+
+export const updateMessage = (msg) => async(dispatch)=> {
+    try{
+         const response = await axios.post('/api/messenger/delivered-message',msg);
+         console.log(response.data);
+    }catch (error){
+         console.log(error.response.message)
+
     }
 }

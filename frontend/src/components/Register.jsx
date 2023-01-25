@@ -79,9 +79,9 @@ const Register = () => {
 
     dispatch(userRegister(formData));
 
-    formData.forEach(function (value, key) {
-      console.log(key, ":", value);
-    });
+    // formData.forEach(function (value, key) {
+    //   console.log(key, ":", value);
+    // });
   };
 
   // fields

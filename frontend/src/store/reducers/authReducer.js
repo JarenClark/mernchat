@@ -34,8 +34,6 @@ if(getToken) {
 
 const authReducer = (state = authState, action) => {
     const {payload, type} = action;
-    console.log(`TYPE == ${type}`)
-
 
     if(type === REGISTER_FAIL || type === USER_LOGIN_FAIL){
          return {

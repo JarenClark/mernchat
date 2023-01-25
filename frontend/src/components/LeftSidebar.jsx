@@ -6,7 +6,7 @@ import { userLogout } from "../store/actions/authAction";
 import { Ellipsis, Logout, Pencil, SearchIcon } from "./svg";
 
 const LeftSidebar = (props) => {
-  const { currentFriend, setcurrentFriend } = props;
+  const { socket, activeUsers, currentFriend, setcurrentFriend,  } = props;
   const dispatch = useDispatch();
 
   // router
@@ -75,18 +75,23 @@ const LeftSidebar = (props) => {
       </div>
 
       {/* ACTIVE FRIENDS LIST */}
-      {friends && friends.length > 0 ? (
+      {activeUsers && activeUsers.length > 0 ? (
         <ul className="px-6 mb-4 pb-4 flex space-x-4 w-full overflow-x-auto">
-          {friends.map((friend, i) => (
-            <li key={i}>
+          {activeUsers.map((friend, i) => (
+            <li key={i} className="group">
               <div
+                onClick={() => setcurrentFriend(friends.find(x => x._id == friend.userId))}
                 style={{
-                  backgroundImage: `url(/images/${friend.image})`,
+                  backgroundImage: `url(/images/${friend.userInfo.image})`,
                 }}
-                className="relative w-12 h-12 rounded-full bg-cover bg-center"
+                className={`${currentFriend?._id == friend.userId ? `` : `animate-pulse`}
+                relative w-12 h-12 rounded-full bg-cover bg-center`}
               >
-                <div className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1"></div>
+                <div className={` absolute bottom-0 right-0 bg-green-500 rounded-full p-1`} />
               </div>
+              {/* <div className="hidden group-hover:block">
+                {friend.userInfo.userName}
+              </div> */}
             </li>
           ))}
         </ul>

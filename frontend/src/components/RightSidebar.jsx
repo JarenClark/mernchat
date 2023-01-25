@@ -6,7 +6,8 @@ import { userLogout } from "../store/actions/authAction";
 import { Close, Ellipsis, SearchIcon } from "./svg";
 
 const RightSidebar = (props) => {
-  const { infoPanelIsOpen, setInfoPanelIsOpen, currentFriend } = props;
+  const { activeUsers, infoPanelIsOpen, setInfoPanelIsOpen, currentFriend } =
+    props;
 
   const dispatch = useDispatch();
 
@@ -41,10 +42,8 @@ const RightSidebar = (props) => {
             ></div>
           )}
           <div
-            className={`absolute right-0 top-0 w-[450px] bg-[#242424] h-screen ease transition duration-500 overflow-hidden 
-      ${
-        infoPanelIsOpen ? `translate-x-0` : `translate-x-full`
-      } max-w-md border-l border-zinc-700`}
+            className={`${infoPanelIsOpen ? `translate-x-0` : `translate-x-full`}
+            absolute right-0 top-0 w-[450px] bg-[#242424] h-screen ease transition duration-500 overflow-hidden max-w-md border-l border-zinc-700`}
           >
             <div className="pt-8 pb-12 p-6 flex flex-col justify-center items-center border-b border-zinc-700 relative">
               <div
@@ -55,8 +54,17 @@ const RightSidebar = (props) => {
               ></div>
 
               <div className="mt-4 text-center">
-                <div className="text-lg font-bold text-green-500 ">Active</div>
-                <div className="text-2xl font-bold">{currentFriend.userName}</div>
+                <h4 className="text-lg font-bold">
+                  {activeUsers.indexOf(currentFriend._id) > -1 ? (
+                    <span className="text-green-500">Active</span>
+                  ) : (
+                    <span className="text-yellow-500">Away</span>
+                  )}
+                </h4>
+
+                <div className="text-2xl font-bold">
+                  {currentFriend.userName}
+                </div>
               </div>
 
               {infoPanelIsOpen && (

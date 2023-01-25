@@ -14,48 +14,72 @@ import {
 import { messageSend, getMessages } from "../store/actions/messengerAction";
 
 const Messenger = (props) => {
-  
-  const { socket, activeUsers, currentFriend, infoPanelIsOpen, setInfoPanelIsOpen } = props;
 
-  const dispatch = useDispatch();
 
   //refs
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
 
+  
+  const {
+    socket,
+    socketMessage,
+    activeUsers,
+    currentFriend,
+    infoPanelIsOpen,
+    setInfoPanelIsOpen,
+  } = props;
+
+  const dispatch = useDispatch();
+
+
   // redux state
   const { loading, authenticate, error, successMessage, myInfo } = useSelector(
     (state) => state.auth
   );
-  const { messages } = useSelector((state) => state.messenger);
+  const { messages, messageSendSuccess } = useSelector(
+    (state) => state.messenger
+  );
 
   // message stuff
   const [newMessage, setNewMessage] = useState("");
 
   const messageHandle = (e) => {
+    // update state
     setNewMessage(e.target.value);
+
+    // let our websocket know
+    socket.current.emit("typingMessage", {
+      senderId: myInfo.id,
+      reseverId: currentFriend._id,
+      msg: e.target.value,
+    });
   };
 
   const sendMessage = (e) => {
-
     // send to our server
     e.preventDefault();
     const data = {
       sender: myInfo.id,
       senderName: myInfo.userName,
       receiver: currentFriend._id,
-      message: newMessage,
+      message: newMessage ? newMessage : "❤",
     };
     dispatch(messageSend(data));
+
+    // let our websocket know
+    socket.current.emit("typingMessage", {
+      senderId: myInfo.id,
+      reseverId: currentFriend._id,
+      msg: "",
+    });
 
     //reset input
     inputRef.current.value = "";
     setNewMessage("");
 
     // socket stuff
-    socket.current.emit('chat message', newMessage);
-
-
+    socket.current.emit("chat message", newMessage);
   };
 
   useEffect(() => {
@@ -72,39 +96,20 @@ const Messenger = (props) => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // emojis
-  const emojis = [
-    "😀",
-    "😃",
-    "😄",
-    "😁",
-    "😆",
-    "😅",
-    "😂",
-    "🤣",
-    "😊",
-    "😇",
-    "🙂",
-    "🙃",
-    "😉",
-    "😌",
-    "😍",
-    "😝",
-    "😜",
-    "🧐",
-    "🤓",
-    "😎",
-    "😕",
-    "🤑",
-    "🥴",
-    "😱",
-  ];
-
-
-  // className={`${
-  //   currentFriend ? `translate-y-0` : `-translate-y-full`
-  // } transition duration-500`}
-
+  useEffect(() => {
+    if (messageSendSuccess) {
+      socket.current.emit("sendMessage", message[message.length - 1]);
+      dispatch({
+        type: "UPDATE_FRIEND_MESSAGE",
+        payload: {
+          msgInfo: message[message.length - 1],
+        },
+      });
+      dispatch({
+        type: "MESSAGE_SEND_SUCCESS_CLEAR",
+      });
+    }
+  }, [messageSendSuccess]);
 
   return (
     <>
@@ -195,13 +200,15 @@ const Messenger = (props) => {
                       ></div>
                     )}
                     <div
-                      className={`max-w-1/3 flex flex-col ${
+                      className={` flex flex-col ${
                         msg.senderId == myInfo.id && `items-end`
                       }`}
                     >
                       <div
                         className={` p-2 text-lg rounded-lg ${
-                          msg.senderId == myInfo.id ? `bg-zinc-700` : `bg-black`
+                          msg.senderId == myInfo.id
+                            ? `ml-48 bg-zinc-700`
+                            : `mr-48 bg-black`
                         }`}
                       >
                         {msg.message.text ? msg.message.text : null}
@@ -235,7 +242,6 @@ const Messenger = (props) => {
             <div className="rounded-full space-x-4 inline-flex items-center fill-available bg-zinc-700 overflow-hidden px-4 justify-between p-2">
               <form onSubmit={sendMessage} className="fill-available">
                 <fieldset className="flex">
-
                   <input
                     ref={inputRef}
                     name="msg"

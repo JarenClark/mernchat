@@ -40,8 +40,6 @@ const Login = () => {
     formData.append("email", email);
     formData.append("password", password);
 
-    console.log(`formDataState`,formDataState)
-
     dispatch(userLogin(formData));
   };
 
