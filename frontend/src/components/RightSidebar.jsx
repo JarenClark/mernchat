@@ -31,6 +31,9 @@ const RightSidebar = (props) => {
     }
   }, [loading, authenticate]);
 
+  console.log(`activeUSERS are ${JSON.stringify(activeUsers, null, 4)}`)
+
+  const isActive = activeUsers.find(u => u.userId == currentFriend?.fndInfo?._id)
   return (
     <>
       {currentFriend && (
@@ -48,14 +51,14 @@ const RightSidebar = (props) => {
             <div className="pt-8 pb-12 p-6 flex flex-col justify-center items-center border-b border-zinc-700 relative">
               <div
                 style={{
-                  backgroundImage: `url(/images/${currentFriend.image})`,
+                  backgroundImage: `url(/images/${currentFriend.fndInfo.image})`,
                 }}
                 className="w-40 h-40 rounded-full bg-cover bg-center"
               ></div>
 
               <div className="mt-4 text-center">
                 <h4 className="text-lg font-bold">
-                  {activeUsers.indexOf(currentFriend._id) > -1 ? (
+                  {isActive != null ? (
                     <span className="text-green-500">Active</span>
                   ) : (
                     <span className="text-yellow-500">Away</span>
@@ -63,7 +66,7 @@ const RightSidebar = (props) => {
                 </h4>
 
                 <div className="text-2xl font-bold">
-                  {currentFriend.userName}
+                  {currentFriend.fndInfo.userName}
                 </div>
               </div>
 
@@ -87,7 +90,7 @@ const RightSidebar = (props) => {
                 {Array.from(Array(15).keys()).map((i) => (
                   <li key={i} className={``}>
                     <img
-                      src={`/images/${currentFriend.image}`}
+                      src={`/images/${currentFriend.fndInfo.image}`}
                       alt=""
                       className="object-fit"
                     />

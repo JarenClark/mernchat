@@ -67,7 +67,7 @@ export const getMessages = (id) => async( dispatch) => {
 
 export const seenMessage = (msg) => async(dispatch)=> {
     try{
-         const response = await axios.post('/api/messenger/seen-message',msg);
+         const response = await axios.post(`${SERVER_URL}/api/messenger/seen-message`,msg);
          console.log(response.data);
     }catch (error){
          console.log(error.response.message)
@@ -78,7 +78,7 @@ export const seenMessage = (msg) => async(dispatch)=> {
 
 export const updateMessage = (msg) => async(dispatch)=> {
     try{
-         const response = await axios.post('/api/messenger/delivered-message',msg);
+         const response = await axios.post(`${SERVER_URL}/api/messenger/delivered-message`,msg);
          console.log(response.data);
     }catch (error){
          console.log(error.response.message)

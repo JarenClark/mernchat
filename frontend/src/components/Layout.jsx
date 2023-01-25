@@ -45,7 +45,7 @@ const Layout = ({ children, title }) => {
   const socket = useRef();
   const [activeUsers, setActiveUsers] = useState([]);
   const [socketMessage, setSocketMessage] = useState("");
-  const [typingMessage, setTypingMessage] = useState("");
+  const [typingMessage, setTypingMessage] = useState(""); // message from our sockets
 
   useEffect(() => {
     socket.current = io("ws://localhost:8000");
@@ -54,7 +54,7 @@ const Layout = ({ children, title }) => {
     });
 
     socket.current.on("typingMessageGet", (data) => {
-      
+      console.log('received typing messageget from socket server')
       setTypingMessage(data);
     });
 
@@ -110,9 +110,10 @@ const Layout = ({ children, title }) => {
   }, []);
 
   useEffect(() => {
+    console.warn(`socketMessage === ${socketMessage}`)
     if (socketMessage && currentFriend) {
       if (
-        socketMessage.senderId === currentFriend._id &&
+        socketMessage.senderId === currentFriend.fndInfo._id &&
         socketMessage.receiverId === myInfo.id
       ) {
         dispatch({
@@ -121,7 +122,9 @@ const Layout = ({ children, title }) => {
             message: socketMessage,
           },
         });
+
         dispatch(seenMessage(socketMessage));
+
         socket.current.emit("messageSeen", socketMessage);
         dispatch({
           type: "UPDATE_FRIEND_MESSAGE",
@@ -136,7 +139,7 @@ const Layout = ({ children, title }) => {
   }, [socketMessage]);
 
   useEffect(() => {
-    if(socketMessage && socketMessage.senderId !== currentFriend._id && socketMessage.receiverId === myInfo.id){
+    if(socketMessage && socketMessage.senderId !== currentFriend.fndInfo._id && socketMessage.receiverId === myInfo.id){
         //  notificationSPlay();
         //  toast.success(`${socketMessage.senderName} Send a New Message`)
          dispatch(updateMessage(socketMessage));

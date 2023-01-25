@@ -12,7 +12,7 @@ const messengerState = {
 
 const messengerReducer = (state = messengerState, action) => {
     const { payload, type } = action
-
+    console.log(`TYPE == ${type} \n `) // PAYLOAD IS \n ${JSON.stringify(payload, null, 4)}
     if (type === GET_USERS_SUCCESS) {
         return {
             ...state,
@@ -41,12 +41,12 @@ const messengerReducer = (state = messengerState, action) => {
         console.log(`TYPE == SOCKET_MESSAGE`)
         return {
             ...state,
-            message: [...state.message, payload.message]
+            message: [...state.messages, payload.message]
         }
     }
 
     if (type === UPDATE_FRIEND_MESSAGE) {
-        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.reseverId || f.fndInfo._id === payload.msgInfo.senderId);
+        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.receiverId || f.fndInfo._id === payload.msgInfo.senderId);
         state.friends[index].msgInfo = payload.msgInfo;
         state.friends[index].msgInfo.status = payload.status;
         return state;
@@ -61,7 +61,7 @@ const messengerReducer = (state = messengerState, action) => {
 
 
     if (type === SEEN_MESSAGE) {
-        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.reseverId || f.fndInfo._id === payload.msgInfo.senderId);
+        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.receiverId || f.fndInfo._id === payload.msgInfo.senderId);
         state.friends[index].msgInfo.status = 'seen';
         return {
             ...state
@@ -69,7 +69,7 @@ const messengerReducer = (state = messengerState, action) => {
     }
 
     if (type === DELIVERED_MESSAGE) {
-        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.reseverId || f.fndInfo._id === payload.msgInfo.senderId);
+        const index = state.friends.findIndex(f => f.fndInfo._id === payload.msgInfo.receiverId || f.fndInfo._id === payload.msgInfo.senderId);
         state.friends[index].msgInfo.status = 'delivered';
         return {
             ...state
@@ -95,7 +95,7 @@ const messengerReducer = (state = messengerState, action) => {
     }
 
     if (type === 'SEEN_ALL') {
-        const index = state.friends.findIndex(f => f.fndInfo._id === payload.reseverId);
+        const index = state.friends.findIndex(f => f.fndInfo._id === payload.receiverId);
         state.friends[index].msgInfo.status = 'seen';
         return {
             ...state

@@ -127,7 +127,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendMessage', (data) => {
+        console.log(`SOCKET sendMessage \n data is`, data)
+
         const user = findFriend(data.receiverId);
+
+        console.log(`USERS ARE ${users}`)
+        console.log(`USER IS ${user}`)
 
         if (user !== undefined) {
             socket.to(user.socketId).emit('getMessage', data)
@@ -161,7 +166,14 @@ io.on('connection', (socket) => {
 
 
     socket.on('typingMessage', (data) => {
+
+
         const user = findFriend(data.receiverId);
+
+        console.log(`USERS ARE ${users.length}`)
+        console.log(`USER IS ${user}`)
+
+
         if (user !== undefined) {
             socket.to(user.socketId).emit('typingMessageGet', {
                 senderId: data.senderId,

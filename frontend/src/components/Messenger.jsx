@@ -20,7 +20,7 @@ const Messenger = (props) => {
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
 
-  
+
   const {
     socket,
     socketMessage,
@@ -51,7 +51,7 @@ const Messenger = (props) => {
     // let our websocket know
     socket.current.emit("typingMessage", {
       senderId: myInfo.id,
-      reseverId: currentFriend._id,
+      receiverId: currentFriend.fndInfo._id,
       msg: e.target.value,
     });
   };
@@ -62,16 +62,17 @@ const Messenger = (props) => {
     const data = {
       sender: myInfo.id,
       senderName: myInfo.userName,
-      receiver: currentFriend._id,
+      receiverId: currentFriend.fndInfo._id,
       message: newMessage ? newMessage : "❤",
     };
+
     dispatch(messageSend(data));
 
     // let our websocket know
-    socket.current.emit("typingMessage", {
+    socket.current.emit("sendMessage", {
       senderId: myInfo.id,
-      reseverId: currentFriend._id,
-      msg: "",
+      receiverId: currentFriend.fndInfo._id,
+      msg: newMessage ? newMessage : "❤",
     });
 
     //reset input
@@ -88,7 +89,7 @@ const Messenger = (props) => {
     setNewMessage("");
 
     // get messages with new user
-    dispatch(getMessages(currentFriend?._id ?? null));
+    dispatch(getMessages(currentFriend?.fndInfo._id ?? null));
   }, [currentFriend]);
 
   // scroll to bottom of messages
@@ -98,11 +99,11 @@ const Messenger = (props) => {
 
   useEffect(() => {
     if (messageSendSuccess) {
-      socket.current.emit("sendMessage", message[message.length - 1]);
+      socket.current.emit("sendMessage", messages[messages.length - 1]);
       dispatch({
         type: "UPDATE_FRIEND_MESSAGE",
         payload: {
-          msgInfo: message[message.length - 1],
+          msgInfo: messages[messages.length - 1],
         },
       });
       dispatch({
@@ -122,7 +123,7 @@ const Messenger = (props) => {
                 {currentFriend ? (
                   <div
                     style={{
-                      backgroundImage: `url(/images/${currentFriend.image})`,
+                      backgroundImage: `url(/images/${currentFriend.fndInfo.image})`,
                     }}
                     className="w-16 h-16 rounded-full bg-cover bg-center"
                   ></div>
@@ -131,7 +132,7 @@ const Messenger = (props) => {
                 )}
                 {currentFriend ? (
                   <h2 className="text-xl font-bold">
-                    {currentFriend.userName}
+                    {currentFriend.fndInfo.userName}
                   </h2>
                 ) : (
                   <div className="flex flex-col space-y-2">
@@ -194,7 +195,7 @@ const Messenger = (props) => {
                     {msg.senderId != myInfo.id && (
                       <div
                         style={{
-                          backgroundImage: `url(/images/${currentFriend.image})`,
+                          backgroundImage: `url(/images/${currentFriend.fndInfo.image})`,
                         }}
                         className="w-10 h-10 mr-4 rounded-full bg-cover bg-center"
                       ></div>

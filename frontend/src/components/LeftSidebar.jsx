@@ -84,7 +84,7 @@ const LeftSidebar = (props) => {
                 style={{
                   backgroundImage: `url(/images/${friend.userInfo.image})`,
                 }}
-                className={`${currentFriend?._id == friend.userId ? `` : `animate-pulse`}
+                className={`${currentFriend?.fndInfo._id == friend.userId ? `` : `animate-pulse`}
                 relative w-12 h-12 rounded-full bg-cover bg-center`}
               >
                 <div className={` absolute bottom-0 right-0 bg-green-500 rounded-full p-1`} />
@@ -111,7 +111,7 @@ const LeftSidebar = (props) => {
           <li
             key={i}
             className={` pr-4 cursor-pointer transition duration-200 border-b border-zinc-700 ${
-              currentFriend != null && currentFriend._id == friend._id
+              currentFriend != null && currentFriend.fndInfo._id == friend.fndInfo._id
                 ? `bg-black`
                 : `hover:bg-black `
             } `}
@@ -122,12 +122,12 @@ const LeftSidebar = (props) => {
             >
               <div
                 style={{
-                  backgroundImage: `url(/images/${friend.image})`,
+                  backgroundImage: `url(/images/${friend.fndInfo.image})`,
                 }}
                 className="w-16 h-16 rounded-full bg-cover bg-center"
               ></div>
               <div>
-                <h3 className="font-bold">{friend.userName}</h3>
+                <h3 className="font-bold">{friend.fndInfo.userName}</h3>
                 <p className="text-zinc-500 truncate">
                   Lorem ipsum dolor, sit amet text-ellipsis elit...
                 </p>
