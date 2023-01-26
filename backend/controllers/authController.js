@@ -134,6 +134,7 @@ module.exports.userRegister = (req, res) => {
                             console.log(`userCreate error is ${error}`)
                             res.status(500).json({
                                 error: {
+                                    expressError: error,
                                     errorMessage: [`Internal Server Error: \n ${error}`]
                                 }
                             })
