@@ -20,6 +20,7 @@ const LeftSidebar = (props) => {
 
   // logout button
   const logout = () => {
+    socket.current.emit('logout', myInfo.id);
     dispatch(userLogout());
   };
 
