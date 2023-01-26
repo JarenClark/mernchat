@@ -218,7 +218,14 @@ const Messenger = (props) => {
                       </div>
                       <div className="px-2 text-sm">
                         {" "}
-                        {formatRelative(new Date(msg.createdAt), new Date())}
+                        {msg.createdAt ? (
+                          <>{formatRelative(new Date(msg.createdAt), new Date())}</>
+                        ) : (
+                          <>{formatRelative(new Date(), new Date())}</>
+                        )}
+                        
+                        {/* <br/>
+                        {msg.createdAt} */}
                       </div>
                     </div>
                   </li>

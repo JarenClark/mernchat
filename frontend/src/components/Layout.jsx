@@ -50,8 +50,11 @@ const Layout = ({ children, title }) => {
   useEffect(() => {
     socket.current = io("ws://localhost:8000");
     socket.current.on("getMessage", (data) => {
-      console.log(`SOCKET SENT GETMESSAGE`)
+      
       setSocketMessage(data);
+      
+      console.log(`SOCKET SENT GETMESSAGE \n  `)
+      console.log(`socketMessage == ${socketMessage}`)
     });
 
     socket.current.on("typingMessageGet", (data) => {
@@ -111,12 +114,13 @@ const Layout = ({ children, title }) => {
   }, []);
 
   useEffect(() => {
-    console.warn(`socketMessage === ${socketMessage}`)
+    console.log(`currentSocketMessage is ${JSON.stringify(socketMessage)}`)
     if (socketMessage && currentFriend) {
       if (
-        socketMessage.senderId === currentFriend.fndInfo._id &&
+        socketMessage.senderId === currentFriend?.fndInfo._id &&
         socketMessage.receiverId === myInfo.id
       ) {
+        console.log(`if statement : ${JSON.stringify(socketMessage)}`)
         dispatch({
           type: "SOCKET_MESSAGE",
           payload: {

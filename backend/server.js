@@ -135,6 +135,14 @@ io.on('connection', (socket) => {
         console.log(`USERS ARE ${users.length}`)
         console.log(`USER IS ${user}`)
 
+        // data.message  = {}
+        // data.message.text = data.msg
+        data.text = data.msg
+        // let d = Date.now()
+        // data.createdAt = d;
+
+        console.log(`SOCKET sendMessage \n data is`, data)
+
         if (user !== undefined) {
             socket.to(user.socketId).emit('getMessage', data)
         }

@@ -39,9 +39,10 @@ const messengerReducer = (state = messengerState, action) => {
 
     if (type === SOCKET_MESSAGE) {
         console.log(`TYPE == SOCKET_MESSAGE`)
+        console.log(JSON.stringify(payload, null, 4))
         return {
             ...state,
-            message: [...state.messages, payload.message]
+            messages: [...state.messages, payload]
         }
     }
 

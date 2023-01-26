@@ -30,6 +30,7 @@ const LeftSidebar = (props) => {
     }
   }, [loading, authenticate]);
 
+  
   return (
     <div className="h-screen overflow-hidden w-full max-w-md border-r border-zinc-700">
       {/** HEADER */}
@@ -80,7 +81,7 @@ const LeftSidebar = (props) => {
           {activeUsers.map((friend, i) => (
             <li key={i} className="group">
               <div
-                onClick={() => setcurrentFriend(friends.find(x => x._id == friend.userId))}
+                onClick={() => setcurrentFriend(friends.find(x => x.fndInfo._id == friend.userId))}
                 style={{
                   backgroundImage: `url(/images/${friend.userInfo.image})`,
                 }}
