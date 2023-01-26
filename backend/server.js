@@ -22,6 +22,7 @@ app.use(bodyParser.json())
 /** CORS */
 const corsOpts = {
     origin: [
+        'https://mernchat.vercel.app',
         'http://localhost',
         'http://localhost:3000',
         'http://localhost:5000',
