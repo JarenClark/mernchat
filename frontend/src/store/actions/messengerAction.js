@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GET_USERS_SUCCESS, MESSAGE_GET_SUCCESS, MESSAGE_SEND_SUCCESS } from "../types/messengerTypes";
 
-const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 export const getFriends = () => async (dispatch) => {
 

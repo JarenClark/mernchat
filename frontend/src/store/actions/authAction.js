@@ -2,7 +2,7 @@ import axios from 'axios'
 import { REGISTER_FAIL, REGISTER_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, LOGOUT_SUCCESS } from '../types/authType'
 
 axios.defaults.withCredentials = true;
-const SERVER_URL = import.meta.env.SERVER_URL || 'http://127.0.0.1:5000'
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 // Accept: 'application/json',
 //,credentials: 'same-origin',
