@@ -44,6 +44,7 @@ export const userRegister = (data) => {
                     error: error?.response?.data?.error ?? [error]
                 }
             })
+            console.log(`${error.response?.data?.error?.expressError ?? `Unknown Error`}`)
             console.log(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
             // alert(`${error.response?.data?.error?.errorMessage ?? `Unknown Error`}`)
 

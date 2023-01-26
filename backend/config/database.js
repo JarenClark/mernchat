@@ -4,7 +4,7 @@ mongoose.set('strictQuery', false)
 
 
 const databaseConnect = () => {
-    // console.log(`DB URL IS ${process.env.DATABASE_URL}`)
+    console.log(`DB URL IS ${process.env.DATABASE_URL}`)
     mongoose.connect(process.env.DATABASE_URL, {
         useNewUrlParser: true,
         useUnifiedTopology : true
