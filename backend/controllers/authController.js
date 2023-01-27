@@ -145,6 +145,7 @@ module.exports.userRegister = (req, res) => {
             } catch (error) {
                 res.status(500).json({
                     error: {
+                        expressError: error,
                         errorMessage: ['Internal Server Error']
                     }
                 })
@@ -219,10 +220,11 @@ module.exports.userLogin = async (req, res) => {
             }
 
 
-        } catch {
+        } catch(error) {
             res.status(404).json({
                 error: {
-                    errorMessage: ['Internal Sever Error']
+                    expressError: error,
+                    errorMessage: ['Internal Server Error']
                 }
             })
 

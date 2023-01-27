@@ -7,6 +7,10 @@ const dotenv = require('dotenv')
 const PORT = process.env.PORT || 5000
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+
+
+const authRouter = require('./routes/authRoute')
+const messengerRouter = require('./routes/messengerRoute')
 require('dotenv').config()
 
 // import messengerRouter from './routes/messengerRoute'
@@ -70,8 +74,6 @@ app.get('/', (req, res) => {
 })
 
 /** CONTROLLERS */
-const authRouter = require('./routes/authRoute')
-const messengerRouter = require('./routes/messengerRoute')
 
 app.use('/api/messenger', authRouter)
 app.use('/api/messenger', messengerRouter)
