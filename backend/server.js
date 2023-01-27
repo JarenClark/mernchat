@@ -70,7 +70,8 @@ dotenv.config({
 // HOME ROUTE
 app.get('/', (req, res) => {
     // console.log(`COOKIES: ${JSON.stringify(req.cookies)}`)
-    res.send(`THIS IS FROM BACKEND`)
+    res.redirect('https://mernchat.vercel.app/login')
+    // res.send(`THIS IS FROM BACKEND`)
 })
 
 /** CONTROLLERS */
